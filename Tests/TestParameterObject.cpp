@@ -16,7 +16,7 @@ void TestParameterObject::initParameters()
 	MY_BOOL_PARAMETER = createParameter("boolParam", "Bool param", "ParameterGroup", "Help text", ParameterBase::BOOL, &m_boolValue);
 
 	m_intValue = 3;
-	MY_INT_PARAMETER = createParameter("intParam", "Int param", "ParameterGroup", "Help text", ParameterBase::INT, &m_intValue);
+	MY_INT_PARAMETER = createParameter("intParam", "Int param", "ParameterGroup", "Help text", ParameterBase::INT32, &m_intValue);
 
 	setDoubleValue(3.123);
 	ParameterBase::GetFunc<double> getFct = std::bind(&TestParameterObject::getDoubleValue, this);
