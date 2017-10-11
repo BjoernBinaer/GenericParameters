@@ -7,7 +7,7 @@
 
 namespace GenParam
 {
-	class BoolParameter : public Parameter
+	class BoolParameter : public Parameter<bool>
 	{
 	protected: 
 		GetFunc<bool> m_getValue;

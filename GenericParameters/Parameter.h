@@ -6,11 +6,17 @@
 
 namespace GenParam
 {
-	class Parameter
+	class ParameterBase
 	{
-
 	public:
-		using Ptr = std::shared_ptr<Parameter>;
+		enum DataTypes
+		{
+			BOOL = 1,
+			INT32, 
+			DOUBLE
+		};
+
+		using Ptr = std::shared_ptr<ParameterBase>;
 		template <typename T>
 		using SetFunc = std::function<void(T)>;
 		template <typename T>
@@ -20,11 +26,11 @@ namespace GenParam
 		template <typename T>
 		using GetVecFunc = std::function<T* ()>;
 
-		Parameter(const std::string& name, const std::string& label, const std::string& group, const std::string& description, const bool readOnly) :
-			m_name(name), m_label(label), m_group(group), m_description(description), m_readOnly(readOnly)
+		ParameterBase(const std::string& name, const std::string& label, const std::string& group, const std::string& description, const DataTypes type, const bool readOnly) :
+			m_name(name), m_label(label), m_group(group), m_description(description), m_type(type), m_readOnly(readOnly)
 		{}
 
-		virtual ~Parameter() {}
+		virtual ~ParameterBase() {}
 
 		std::string getName() const { return m_name; }
 		void setName(const std::string& name) { m_name = name; }
@@ -41,12 +47,42 @@ namespace GenParam
 		bool getReadOnly() const { return m_readOnly; }
 		void setReadOnly(const bool val) { m_readOnly = val; }
 
+		GenParam::ParameterBase::DataTypes getType() const { return m_type; }
+		
 	protected:
 		std::string m_name;
 		std::string m_label;
 		std::string m_group;
 		std::string m_description;
+		DataTypes m_type;
 		bool m_readOnly;
+	};
+
+	template<typename T>
+	class Parameter : public ParameterBase
+	{
+	protected:
+		GetFunc<T> m_getValue;
+		SetFunc<T> m_setValue;
+
+	public:
+		Parameter(const std::string& name, const std::string& label, const std::string& group, const std::string& description, ParameterBase::DataTypes type, T* valuePtr, const bool readOnly)
+			: ParameterBase(name, label, group, description, type, readOnly)
+		{
+			m_getValue = [valuePtr]() { return *valuePtr; };
+			m_setValue = [valuePtr](T value) { *valuePtr = value; };
+		}
+
+		Parameter(const std::string& name, const std::string& label, const std::string& group, const std::string& description, ParameterBase::DataTypes type, GetFunc<T> getValue, SetFunc<T> setValue, const bool readOnly)
+			: ParameterBase(name, label, group, description, type, readOnly),
+			m_getValue(getValue), m_setValue(setValue)
+		{
+		}
+
+		void setValue(const T v) { m_setValue(v); }
+		T getValue() const { return m_getValue(); }
+
+		virtual ~Parameter() {}
 	};
 }
 

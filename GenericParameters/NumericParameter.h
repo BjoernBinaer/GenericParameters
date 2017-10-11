@@ -8,28 +8,18 @@
 namespace GenParam
 {
 	template<typename T>
-	class NumericParameter : public Parameter
+	class NumericParameter : public Parameter<T>
 	{
-	protected: 
-		GetFunc<T> m_getValue;
-		SetFunc<T> m_setValue;
-
 	public:
-		NumericParameter(const std::string& name, const std::string& label, const std::string& group, const std::string& description, T* valuePtr, const bool readOnly)
-			: Parameter(name, label, group, description, readOnly)
-		{
-			m_getValue = [valuePtr]() { return *valuePtr; };
-			m_setValue = [valuePtr](T value) { *valuePtr = value; };
-		}
-
-		NumericParameter(const std::string& name, const std::string& label, const std::string& group, const std::string& description, GetFunc<T> getValue,	SetFunc<T> setValue, const bool readOnly)
-			: Parameter(name, label, group, description, readOnly),
-			m_getValue(getValue), m_setValue(setValue)
+		NumericParameter(const std::string& name, const std::string& label, const std::string& group, const std::string& description, ParameterBase::DataTypes type, T* valuePtr, const bool readOnly)
+			: Parameter<T>(name, label, group, description, type, valuePtr, readOnly)
 		{
 		}
 
-		void setValue(const T v) { m_setValue(v); }
-		T getValue() const { return m_getValue(); }
+		NumericParameter(const std::string& name, const std::string& label, const std::string& group, const std::string& description, ParameterBase::DataTypes type, GetFunc<T> getValue,	SetFunc<T> setValue, const bool readOnly)
+			: Parameter<T>(name, label, group, description, type, getValue, setValue, readOnly)
+		{
+		}
 
 		virtual ~NumericParameter() {}
 	};

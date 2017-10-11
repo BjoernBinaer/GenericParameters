@@ -3,7 +3,6 @@
 
 #include <vector>
 #include <memory>
-#include "BoolParameter.h"
 #include "NumericParameter.h"
 
 namespace GenParam
@@ -11,7 +10,7 @@ namespace GenParam
 	class ParameterObject
 	{
 	protected:
-		std::vector<std::shared_ptr<Parameter>> m_parameters;
+		std::vector<std::shared_ptr<ParameterBase>> m_parameters;
 	
 	public:
 		ParameterObject() : m_parameters() {}
@@ -19,57 +18,35 @@ namespace GenParam
 
 		virtual void initParameters() {}
 		unsigned int numParameters() const { return static_cast<unsigned int>(m_parameters.size()); }
-		Parameter::Ptr getParameter(const unsigned int index) { return m_parameters[index]; }
+		ParameterBase::Ptr getParameter(const unsigned int index) { return m_parameters[index]; }
 
-		int createBoolParameter(const std::string &name, const std::string &label, const std::string &group, const std::string &description, bool* valuePtr, const bool readOnly = false)
+		template<typename T>
+		int createParameter(const std::string &name, const std::string &label, const std::string &group, const std::string &description, ParameterBase::DataTypes type,  T* valuePtr, const bool readOnly = false)
 		{
-			std::shared_ptr<BoolParameter> param(new BoolParameter(name, label, group, description, valuePtr, readOnly));
+			std::shared_ptr<Parameter<T>> param(new Parameter<T>(name, label, group, description, type, valuePtr, readOnly));
 			m_parameters.push_back(param);
 			return static_cast<int>(m_parameters.size() - 1);
 		}
 
-		int createIntParameter(const std::string &name, const std::string &label, const std::string &group, const std::string &description, int* valuePtr, const bool readOnly = false)
+		template<typename T>
+		int createParameter(const std::string &name, const std::string &label, const std::string &group, const std::string &description, ParameterBase::DataTypes type, Parameter::GetFunc<T> getValue, Parameter::SetFunc<T> setValue, const bool readOnly = false)
 		{
-			std::shared_ptr<IntParameter> param(new IntParameter(name, label, group, description, valuePtr, readOnly));
+			std::shared_ptr<DoubleParameter> param(new DoubleParameter(name, label, group, description, type, getValue, setValue, readOnly));
 			m_parameters.push_back(param);
 			return static_cast<int>(m_parameters.size() - 1);
 		}
 
-		int createDoubleParameter(const std::string &name, const std::string &label, const std::string &group, const std::string &description, double* valuePtr, const bool readOnly = false)
+		template<typename T>
+		T getParameter(unsigned int parameterId) const
 		{
-			std::shared_ptr<DoubleParameter> param(new DoubleParameter(name, label, group, description, valuePtr, readOnly));
-			m_parameters.push_back(param);
-			return static_cast<int>(m_parameters.size() - 1);
-		}
-
-		int createDoubleParameter(const std::string &name, const std::string &label, const std::string &group, const std::string &description, Parameter::GetFunc<double> getValue, Parameter::SetFunc<double> setValue, const bool readOnly = false)
-		{
-			std::shared_ptr<DoubleParameter> param(new DoubleParameter(name, label, group, description, getValue, setValue, readOnly));
-			m_parameters.push_back(param);
-			return static_cast<int>(m_parameters.size() - 1);
-		}
-
-		bool getBool(unsigned int parameterId) const
-		{
-			auto param = std::static_pointer_cast<BoolParameter>(m_parameters[parameterId]);
+			auto param = std::static_pointer_cast<Parameter<T>>(m_parameters[parameterId]);
 			return param->getValue();
 		}
 
-		int getInt(unsigned int parameterId) const
+		template<typename T>
+		void setParameter(unsigned int parameterId, const T v) 
 		{
-			auto param = std::static_pointer_cast<IntParameter>(m_parameters[parameterId]);
-			return param->getValue();
-		}
-
-		double getDouble(unsigned int parameterId) const
-		{
-			auto param = std::static_pointer_cast<DoubleParameter>(m_parameters[parameterId]);
-			return param->getValue();
-		}
-
-		void setDouble(unsigned int parameterId, const double v) 
-		{
-			auto param = std::static_pointer_cast<DoubleParameter>(m_parameters[parameterId]);
+			auto param = std::static_pointer_cast<Parameter<T>>(m_parameters[parameterId]);
 			param->setValue(v);
 		}
 	};
