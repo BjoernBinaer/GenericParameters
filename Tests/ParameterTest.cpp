@@ -26,9 +26,14 @@ void paramTest()
 	assert(tc.getBool(TestParameterObject::MY_BOOL_PARAMETER) == true);
 
 	auto intParam = std::static_pointer_cast<IntParameter>(tc.getParameter(TestParameterObject::MY_INT_PARAMETER));
-	std::cout << intParam->getValue() << "\n";
 	assert(intParam->getValue() == 3);
 	assert(tc.getInt(TestParameterObject::MY_INT_PARAMETER) == 3);
+
+	auto doubleParam = std::static_pointer_cast<DoubleParameter>(tc.getParameter(TestParameterObject::MY_DOUBLE_PARAMETER));
+	assert(doubleParam->getValue() == 3.123);
+	assert(tc.getDouble(TestParameterObject::MY_DOUBLE_PARAMETER) == 3.123);
+	tc.setDouble(TestParameterObject::MY_DOUBLE_PARAMETER, 4.85);
+	assert(tc.getDouble(TestParameterObject::MY_DOUBLE_PARAMETER) == 4.85);
 
 
 	std::cout << "Success\n";

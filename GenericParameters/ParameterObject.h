@@ -42,6 +42,13 @@ namespace GenParam
 			return static_cast<int>(m_parameters.size() - 1);
 		}
 
+		int createDoubleParameter(const std::string &name, const std::string &label, const std::string &group, const std::string &description, Parameter::GetFunc<double> getValue, Parameter::SetFunc<double> setValue, const bool readOnly = false)
+		{
+			std::shared_ptr<DoubleParameter> param(new DoubleParameter(name, label, group, description, getValue, setValue, readOnly));
+			m_parameters.push_back(param);
+			return static_cast<int>(m_parameters.size() - 1);
+		}
+
 		bool getBool(unsigned int parameterId) const
 		{
 			auto param = std::static_pointer_cast<BoolParameter>(m_parameters[parameterId]);
@@ -58,6 +65,12 @@ namespace GenParam
 		{
 			auto param = std::static_pointer_cast<DoubleParameter>(m_parameters[parameterId]);
 			return param->getValue();
+		}
+
+		void setDouble(unsigned int parameterId, const double v) 
+		{
+			auto param = std::static_pointer_cast<DoubleParameter>(m_parameters[parameterId]);
+			param->setValue(v);
 		}
 	};
 

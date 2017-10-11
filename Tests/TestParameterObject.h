@@ -21,6 +21,9 @@ namespace GenParam
 		~TestParameterObject() {};
 
 		virtual void initParameters();
+		
+		double getDoubleValue() { return m_doubleValue; }
+		void setDoubleValue(double val) { m_doubleValue = val; }
 	};
 }
 

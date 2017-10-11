@@ -18,8 +18,10 @@ void TestParameterObject::initParameters()
 	m_intValue = 3;
 	MY_INT_PARAMETER = createIntParameter("intParam", "Int param", "ParameterGroup", "Help text", &m_intValue);
 
-	m_doubleValue = 3;
-	MY_DOUBLE_PARAMETER = createDoubleParameter("doubleParam", "Double param", "ParameterGroup", "Help text", &m_doubleValue);
+	setDoubleValue(3.123);
+	Parameter::GetFunc<double> getFct = std::bind(&TestParameterObject::getDoubleValue, this);
+	Parameter::SetFunc<double> setFct = std::bind(&TestParameterObject::setDoubleValue, this, std::placeholders::_1);
+	MY_DOUBLE_PARAMETER = createDoubleParameter("doubleParam", "Double param", "ParameterGroup", "Help text", getFct, setFct);
 
 }
 
