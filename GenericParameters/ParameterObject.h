@@ -21,50 +21,78 @@ namespace GenParam
 		ParameterBase::Ptr getParameter(const unsigned int index) { return m_parameters[index]; }
 
 		template<typename T>
-		int createParameter(const std::string &name, const std::string &label, const std::string &group, const std::string &description, ParameterBase::DataTypes type,  T* valuePtr, const bool readOnly = false)
+		int createParameter(const std::string &name, const std::string &label, const std::string &group, const std::string &description,
+			ParameterBase::DataTypes type,  T* valuePtr, 
+			const bool readOnly = false, const bool visible=true)
 		{
-			std::shared_ptr<Parameter<T>> param(new Parameter<T>(name, label, group, description, type, valuePtr, readOnly));
+			std::shared_ptr<Parameter<T>> param(new Parameter<T>(name, label, group, description, type, valuePtr, readOnly, visible));
 			m_parameters.push_back(param);
 			return static_cast<int>(m_parameters.size() - 1);
 		}
 
 		template<typename T>
-		int createParameter(const std::string &name, const std::string &label, const std::string &group, const std::string &description, ParameterBase::DataTypes type, Parameter::GetFunc<T> getValue, Parameter::SetFunc<T> setValue, const bool readOnly = false)
+		int createParameter(const std::string &name, const std::string &label, const std::string &group, const std::string &description, 
+			ParameterBase::DataTypes type, Parameter::GetFunc<T> getValue, Parameter::SetFunc<T> setValue, 
+			const bool readOnly = false, const bool visible = true)
 		{
-			std::shared_ptr<Parameter<T>> param(new Parameter<T>(name, label, group, description, type, getValue, setValue, readOnly));
+			std::shared_ptr<Parameter<T>> param(new Parameter<T>(name, label, group, description, type, getValue, setValue, readOnly, visible));
 			m_parameters.push_back(param);
 			return static_cast<int>(m_parameters.size() - 1);
 		}
 
 		template<typename T>
-		int createEnumParameter(const std::string &name, const std::string &label, const std::string &group, const std::string &description, ParameterBase::DataTypes type, T* valuePtr, const bool readOnly = false)
+		int createEnumParameter(const std::string &name, const std::string &label, const std::string &group, const std::string &description, 
+			ParameterBase::DataTypes type, T* valuePtr, 
+			const bool readOnly = false, const bool visible = true)
 		{
-			std::shared_ptr<EnumParameter> param(new EnumParameter(name, label, group, description, type, valuePtr, readOnly));
+			std::shared_ptr<EnumParameter> param(new EnumParameter(name, label, group, description, type, valuePtr, readOnly, visible));
 			m_parameters.push_back(param);
 			return static_cast<int>(m_parameters.size() - 1);
 		}
 
 		template<typename T>
-		int createEnumParameter(const std::string &name, const std::string &label, const std::string &group, const std::string &description, ParameterBase::DataTypes type, Parameter::GetFunc<T> getValue, Parameter::SetFunc<T> setValue, const bool readOnly = false)
+		int createEnumParameter(const std::string &name, const std::string &label, const std::string &group, const std::string &description, 
+			ParameterBase::DataTypes type, Parameter::GetFunc<T> getValue, Parameter::SetFunc<T> setValue, 
+			const bool readOnly = false, const bool visible = true)
 		{
-			std::shared_ptr<EnumParameter> param(new EnumParameter(name, label, group, description, type, getValue, setValue, readOnly));
+			std::shared_ptr<EnumParameter> param(new EnumParameter(name, label, group, description, type, getValue, setValue, readOnly, visible));
 			m_parameters.push_back(param);
 			return static_cast<int>(m_parameters.size() - 1);
 		}
 
 		template<typename T>
-		T getValue(unsigned int parameterId) const
+		T getValue(const unsigned int parameterId) const
 		{
 			auto param = std::static_pointer_cast<Parameter<T>>(m_parameters[parameterId]);
 			return param->getValue();
 		}
 
 		template<typename T>
-		void setValue(unsigned int parameterId, const T v) 
+		void setValue(const unsigned int parameterId, const T v) 
 		{
 			auto param = std::static_pointer_cast<Parameter<T>>(m_parameters[parameterId]);
 			param->setValue(v);
 		}
+
+		void setVisible(const unsigned int parameterId, const bool v) { m_parameters[parameterId]->setVisible(v); }
+		bool getVisible(const unsigned int parameterId) { return m_parameters[parameterId]->getVisible(); }
+
+		void setReadOnly(const unsigned int parameterId, const bool v) { m_parameters[parameterId]->setReadOnly(v); }
+		bool getReadOnly(const unsigned int parameterId) { return m_parameters[parameterId]->getReadOnly(); }
+
+		void setName(const unsigned int parameterId, const std::string &v) { m_parameters[parameterId]->setName(v); }
+		std::string getName(const unsigned int parameterId) { return m_parameters[parameterId]->getName(); }
+
+		void setLabel(const unsigned int parameterId, const std::string &v) { m_parameters[parameterId]->setLabel(v); }
+		std::string getLabel(const unsigned int parameterId) { return m_parameters[parameterId]->getLabel(); }
+
+		void setGroup(const unsigned int parameterId, const std::string &v) { m_parameters[parameterId]->setGroup(v); }
+		std::string getGroup(const unsigned int parameterId) { return m_parameters[parameterId]->getGroup(); }
+
+		void setDescription(const unsigned int parameterId, const std::string &v) { m_parameters[parameterId]->setDescription(v); }
+		std::string getDescription(const unsigned int parameterId) { return m_parameters[parameterId]->getDescription(); }
+
+		GenParam::ParameterBase::DataTypes getType(const unsigned int parameterId) const { return m_parameters[parameterId]->getType(); }
 	};
 
 }

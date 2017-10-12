@@ -11,13 +11,17 @@ namespace GenParam
 	class NumericParameter : public Parameter<T>
 	{
 	public:
-		NumericParameter(const std::string& name, const std::string& label, const std::string& group, const std::string& description, ParameterBase::DataTypes type, T* valuePtr, const bool readOnly)
-			: Parameter<T>(name, label, group, description, type, valuePtr, readOnly)
+		NumericParameter(const std::string& name, const std::string& label, const std::string& group, const std::string& description, 
+			ParameterBase::DataTypes type, T* valuePtr, 
+			const bool readOnly, const bool visible)
+			: Parameter<T>(name, label, group, description, type, valuePtr, readOnly, visible)
 		{
 		}
 
-		NumericParameter(const std::string& name, const std::string& label, const std::string& group, const std::string& description, ParameterBase::DataTypes type, GetFunc<T> getValue,	SetFunc<T> setValue, const bool readOnly)
-			: Parameter<T>(name, label, group, description, type, getValue, setValue, readOnly)
+		NumericParameter(const std::string& name, const std::string& label, const std::string& group, const std::string& description, 
+			ParameterBase::DataTypes type, GetFunc<T> getValue,	SetFunc<T> setValue, 
+			const bool readOnly, const bool visible)
+			: Parameter<T>(name, label, group, description, type, getValue, setValue, readOnly, visible)
 		{
 		}
 
