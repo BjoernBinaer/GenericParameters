@@ -13,12 +13,13 @@ namespace GenParam
 	public: 
 		using Ptr = std::shared_ptr<EnumParameter>;
 
-	protected: 
 		struct EnumValue
 		{
 			int id;
 			std::string name;
 		};
+
+	protected:
 		std::vector<EnumValue> m_enumValues;
 
 	public:
@@ -42,6 +43,8 @@ namespace GenParam
 			val.id = id;
 			m_enumValues.push_back(val);
 		}
+
+		const std::vector<EnumValue>& getEnumValues() { return m_enumValues;  }
 	};
 }
 

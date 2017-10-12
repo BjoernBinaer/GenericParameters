@@ -87,6 +87,7 @@ namespace GenParam
 	};
 
 	using BoolParameter = Parameter<bool>;
+	using StringParameter = Parameter<std::string>;
 }
 
 #endif

@@ -53,14 +53,14 @@ namespace GenParam
 		}
 
 		template<typename T>
-		T getParameter(unsigned int parameterId) const
+		T getValue(unsigned int parameterId) const
 		{
 			auto param = std::static_pointer_cast<Parameter<T>>(m_parameters[parameterId]);
 			return param->getValue();
 		}
 
 		template<typename T>
-		void setParameter(unsigned int parameterId, const T v) 
+		void setValue(unsigned int parameterId, const T v) 
 		{
 			auto param = std::static_pointer_cast<Parameter<T>>(m_parameters[parameterId]);
 			param->setValue(v);
