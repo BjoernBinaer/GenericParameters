@@ -14,11 +14,14 @@ namespace GenParam
 			BOOL = 1,
 			FLOAT,
 			DOUBLE, 
+			INT8,
 			INT16,
 			INT32,
+			UINT8,
 			UINT16, 
 			UINT32,
-			ENUM
+			ENUM, 
+			STRING
 		};
 
 		using Ptr = std::shared_ptr<ParameterBase>;
