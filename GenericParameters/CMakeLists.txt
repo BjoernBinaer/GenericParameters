@@ -1,6 +1,6 @@
 add_library(GenericParameters    	
 	Parameter.h
-	BoolParameter.h
+	EnumParameter.h
 	NumericParameter.h
 	ParameterObject.h
 

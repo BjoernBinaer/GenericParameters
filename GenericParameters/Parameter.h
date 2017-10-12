@@ -13,7 +13,8 @@ namespace GenParam
 		{
 			BOOL = 1,
 			INT32, 
-			DOUBLE
+			DOUBLE, 
+			ENUM
 		};
 
 		using Ptr = std::shared_ptr<ParameterBase>;
@@ -84,6 +85,8 @@ namespace GenParam
 
 		virtual ~Parameter() {}
 	};
+
+	using BoolParameter = Parameter<bool>;
 }
 
 #endif

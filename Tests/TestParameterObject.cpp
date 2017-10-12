@@ -1,12 +1,16 @@
 
 #include "TestParameterObject.h"
+#include "GenericParameters/EnumParameter.h"
+#include <memory>
 
 using namespace GenParam;
 
 int GenParam::TestParameterObject::MY_BOOL_PARAMETER = -1;
 int GenParam::TestParameterObject::MY_INT_PARAMETER = -1;
 int GenParam::TestParameterObject::MY_DOUBLE_PARAMETER = -1;
-
+int GenParam::TestParameterObject::MY_ENUM_PARAMETER = -1;
+int GenParam::TestParameterObject::MY_ENUM_VALUE1 = -1;
+int GenParam::TestParameterObject::MY_ENUM_VALUE2 = -1;
 
 void TestParameterObject::initParameters()
 {
@@ -23,6 +27,11 @@ void TestParameterObject::initParameters()
 	ParameterBase::SetFunc<double> setFct = std::bind(&TestParameterObject::setDoubleValue, this, std::placeholders::_1);
 	MY_DOUBLE_PARAMETER = createParameter("doubleParam", "Double param", "ParameterGroup", "Help text", ParameterBase::DOUBLE, getFct, setFct);
 
+	m_enumValue = 1;
+	MY_ENUM_PARAMETER = createEnumParameter("enumParam", "Enum param", "ParameterGroup", "Help text", ParameterBase::ENUM, &m_enumValue);
+	EnumParameter::Ptr enumParam = std::static_pointer_cast<EnumParameter>(getParameter(MY_ENUM_PARAMETER));
+	enumParam->addEnumValue("enum1", MY_ENUM_VALUE1);
+	enumParam->addEnumValue("enum2", MY_ENUM_VALUE2);
 }
 
 

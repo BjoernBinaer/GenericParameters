@@ -9,13 +9,18 @@ namespace GenParam
 	{
 	protected:
 		bool m_boolValue;
-		int m_intValue;
+		int m_intValue;		
 		double m_doubleValue;
+		int m_enumValue;
 
 	public:
 		static int MY_BOOL_PARAMETER;
 		static int MY_INT_PARAMETER;
 		static int MY_DOUBLE_PARAMETER;
+		static int MY_ENUM_PARAMETER;
+
+		static int MY_ENUM_VALUE1;
+		static int MY_ENUM_VALUE2;
 		
 		TestParameterObject() { initParameters();  };
 		~TestParameterObject() {};
