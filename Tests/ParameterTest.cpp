@@ -20,7 +20,7 @@ int main( int argc, char **argv )
 void paramTest()
 {
 	TestParameterObject tc;
-	assert(tc.numParameters() == 4);
+	assert(tc.numParameters() == 5);
 
 	auto boolParam = std::static_pointer_cast<BoolParameter>(tc.getParameter(TestParameterObject::MY_BOOL_PARAMETER));
 	assert(boolParam->getValue() == true);
@@ -35,6 +35,8 @@ void paramTest()
 	assert(tc.getValue<double>(TestParameterObject::MY_DOUBLE_PARAMETER) == 3.123);
 	tc.setValue<double>(TestParameterObject::MY_DOUBLE_PARAMETER, 4.85);
 	assert(tc.getValue<double>(TestParameterObject::MY_DOUBLE_PARAMETER) == 4.85);
+	assert(doubleParam->getMinValue() == 0.1);
+	assert(doubleParam->getMaxValue() == 0.9);
 
 	auto enumParam = std::static_pointer_cast<EnumParameter>(tc.getParameter(TestParameterObject::MY_ENUM_PARAMETER));
 	assert(enumParam->getValue() == TestParameterObject::MY_ENUM_VALUE2);

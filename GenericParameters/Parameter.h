@@ -12,8 +12,12 @@ namespace GenParam
 		enum DataTypes
 		{
 			BOOL = 1,
-			INT32, 
+			FLOAT,
 			DOUBLE, 
+			INT16,
+			INT32,
+			UINT16, 
+			UINT32,
 			ENUM
 		};
 
@@ -27,9 +31,10 @@ namespace GenParam
 		template <typename T>
 		using GetVecFunc = std::function<T* ()>;
 
-		ParameterBase(const std::string& name, const std::string& label, const std::string& group, const std::string& description, const DataTypes type, const bool readOnly, const bool visible = true) :
-			m_name(name), m_label(label), m_group(group), m_description(description), m_type(type), m_readOnly(readOnly), m_visible(visible)
-		{}
+		ParameterBase(const std::string& name, const std::string& label, const DataTypes type) :
+			m_name(name), m_label(label), m_group(""), m_description(""), m_type(type), m_readOnly(false), m_visible(true)
+		{
+		}
 
 		virtual ~ParameterBase() {}
 
@@ -71,19 +76,15 @@ namespace GenParam
 		SetFunc<T> m_setValue;
 
 	public:
-		Parameter(const std::string& name, const std::string& label, const std::string& group, const std::string& description, 
-			ParameterBase::DataTypes type, T* valuePtr, 
-			const bool readOnly, const bool visible)
-			: ParameterBase(name, label, group, description, type, readOnly, visible)
+		Parameter(const std::string& name, const std::string& label, ParameterBase::DataTypes type, T* valuePtr)
+			: ParameterBase(name, label, type)
 		{
 			m_getValue = [valuePtr]() { return *valuePtr; };
 			m_setValue = [valuePtr](T value) { *valuePtr = value; };
 		}
 
-		Parameter(const std::string& name, const std::string& label, const std::string& group, const std::string& description, 
-			ParameterBase::DataTypes type, GetFunc<T> getValue, SetFunc<T> setValue, 
-			const bool readOnly, const bool visible)
-			: ParameterBase(name, label, group, description, type, readOnly, visible),
+		Parameter(const std::string& name, const std::string& label, ParameterBase::DataTypes type, GetFunc<T> getValue, SetFunc<T> setValue)
+			: ParameterBase(name, label, type),
 			m_getValue(getValue), m_setValue(setValue)
 		{
 		}

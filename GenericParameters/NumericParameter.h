@@ -10,22 +10,30 @@ namespace GenParam
 	template<typename T>
 	class NumericParameter : public Parameter<T>
 	{
+	protected:
+		T m_minValue;
+		T m_maxValue;
+
 	public:
-		NumericParameter(const std::string& name, const std::string& label, const std::string& group, const std::string& description, 
-			ParameterBase::DataTypes type, T* valuePtr, 
-			const bool readOnly, const bool visible)
-			: Parameter<T>(name, label, group, description, type, valuePtr, readOnly, visible)
+		using Ptr = std::shared_ptr<NumericParameter<T>>;
+
+		NumericParameter(const std::string& name, const std::string& label,	ParameterBase::DataTypes type, T* valuePtr)
+			: Parameter<T>(name, label, type, valuePtr)
 		{
 		}
 
-		NumericParameter(const std::string& name, const std::string& label, const std::string& group, const std::string& description, 
-			ParameterBase::DataTypes type, GetFunc<T> getValue,	SetFunc<T> setValue, 
-			const bool readOnly, const bool visible)
-			: Parameter<T>(name, label, group, description, type, getValue, setValue, readOnly, visible)
+		NumericParameter(const std::string& name, const std::string& label, ParameterBase::DataTypes type, GetFunc<T> getValue,	SetFunc<T> setValue)
+			: Parameter<T>(name, label, type, getValue, setValue)
 		{
 		}
 
 		virtual ~NumericParameter() {}
+		
+		T getMinValue() const { return m_minValue; }
+		void setMinValue(const T val) { m_minValue = val; }
+		
+		T getMaxValue() const { return m_maxValue; }
+		void setMaxValue(const T val) { m_maxValue = val; }
 	};
 
 	using FloatParameter = NumericParameter<float>;

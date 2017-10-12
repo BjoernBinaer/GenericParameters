@@ -23,17 +23,13 @@ namespace GenParam
 		std::vector<EnumValue> m_enumValues;
 
 	public:
-		EnumParameter(const std::string& name, const std::string& label, const std::string& group, const std::string& description, 
-			ParameterBase::DataTypes type, int* valuePtr, 
-			const bool readOnly, const bool visible)
-			: Parameter<int>(name, label, group, description, type, valuePtr, readOnly, visible)
+		EnumParameter(const std::string& name, const std::string& label, ParameterBase::DataTypes type, int* valuePtr)
+			: Parameter<int>(name, label, type, valuePtr)
 		{
 		}
 
-		EnumParameter(const std::string& name, const std::string& label, const std::string& group, const std::string& description, 
-			ParameterBase::DataTypes type, GetFunc<int> getValue, SetFunc<int> setValue, 
-			const bool readOnly, const bool visible)
-			: Parameter<int>(name, label, group, description, type, getValue, setValue, readOnly, visible)
+		EnumParameter(const std::string& name, const std::string& label, ParameterBase::DataTypes type, GetFunc<int> getValue, SetFunc<int> setValue)
+			: Parameter<int>(name, label, type, getValue, setValue)
 		{
 		}
 

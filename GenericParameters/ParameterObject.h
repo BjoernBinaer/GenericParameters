@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include "NumericParameter.h"
+#include "EnumParameter.h"
 
 namespace GenParam
 {
@@ -21,42 +22,44 @@ namespace GenParam
 		ParameterBase::Ptr getParameter(const unsigned int index) { return m_parameters[index]; }
 
 		template<typename T>
-		int createParameter(const std::string &name, const std::string &label, const std::string &group, const std::string &description,
-			ParameterBase::DataTypes type,  T* valuePtr, 
-			const bool readOnly = false, const bool visible=true)
+		int createParameter(const std::string &name, const std::string &label, ParameterBase::DataTypes type,  T* valuePtr)
 		{
-			std::shared_ptr<Parameter<T>> param(new Parameter<T>(name, label, group, description, type, valuePtr, readOnly, visible));
-			m_parameters.push_back(param);
+			// check for numeric parameters
+			if ((type >= ParameterBase::FLOAT) && (type <= ParameterBase::UINT32))
+				m_parameters.push_back(std::shared_ptr<NumericParameter<T>>(new NumericParameter<T>(name, label, type, valuePtr)));
+			else
+				m_parameters.push_back(std::shared_ptr<Parameter<T>>(new Parameter<T>(name, label, type, valuePtr)));
 			return static_cast<int>(m_parameters.size() - 1);
 		}
 
 		template<typename T>
-		int createParameter(const std::string &name, const std::string &label, const std::string &group, const std::string &description, 
-			ParameterBase::DataTypes type, Parameter::GetFunc<T> getValue, Parameter::SetFunc<T> setValue, 
-			const bool readOnly = false, const bool visible = true)
+		int createParameter(const std::string &name, const std::string &label, ParameterBase::DataTypes type, Parameter::GetFunc<T> getValue, Parameter::SetFunc<T> setValue)
 		{
-			std::shared_ptr<Parameter<T>> param(new Parameter<T>(name, label, group, description, type, getValue, setValue, readOnly, visible));
-			m_parameters.push_back(param);
+			// check for numeric parameters
+			if ((type >= ParameterBase::FLOAT) && (type <= ParameterBase::UINT32))
+				m_parameters.push_back(std::shared_ptr<NumericParameter<T>>(new NumericParameter<T>(name, label, type, getValue, setValue)));
+			else
+				m_parameters.push_back(std::shared_ptr<Parameter<T>>(new Parameter<T>(name, label, type, getValue, setValue)));
 			return static_cast<int>(m_parameters.size() - 1);
 		}
 
-		template<typename T>
-		int createEnumParameter(const std::string &name, const std::string &label, const std::string &group, const std::string &description, 
-			ParameterBase::DataTypes type, T* valuePtr, 
-			const bool readOnly = false, const bool visible = true)
+		template<>
+		int createParameter<int>(const std::string &name, const std::string &label, ParameterBase::DataTypes type, int* valuePtr)
 		{
-			std::shared_ptr<EnumParameter> param(new EnumParameter(name, label, group, description, type, valuePtr, readOnly, visible));
-			m_parameters.push_back(param);
+			if (type == ParameterBase::ENUM)
+				m_parameters.push_back(std::shared_ptr<EnumParameter>(new EnumParameter(name, label, type, valuePtr)));
+			else
+				m_parameters.push_back(std::shared_ptr<NumericParameter<int>>(new NumericParameter<int>(name, label, type, valuePtr)));
 			return static_cast<int>(m_parameters.size() - 1);
 		}
 
-		template<typename T>
-		int createEnumParameter(const std::string &name, const std::string &label, const std::string &group, const std::string &description, 
-			ParameterBase::DataTypes type, Parameter::GetFunc<T> getValue, Parameter::SetFunc<T> setValue, 
-			const bool readOnly = false, const bool visible = true)
+		template<>
+		int createParameter<int>(const std::string &name, const std::string &label, ParameterBase::DataTypes type, ParameterBase::GetFunc<int> getValue, ParameterBase::SetFunc<int> setValue)
 		{
-			std::shared_ptr<EnumParameter> param(new EnumParameter(name, label, group, description, type, getValue, setValue, readOnly, visible));
-			m_parameters.push_back(param);
+			if (type == ParameterBase::ENUM)
+				m_parameters.push_back(std::shared_ptr<EnumParameter>(new EnumParameter(name, label, type, getValue, setValue)));
+			else
+				m_parameters.push_back(std::shared_ptr<NumericParameter<int>>(new NumericParameter<int>(name, label, type, getValue, setValue)));
 			return static_cast<int>(m_parameters.size() - 1);
 		}
 
