@@ -22,44 +22,52 @@ namespace GenParam
 		ParameterBase::Ptr getParameter(const unsigned int index) { return m_parameters[index]; }
 
 		template<typename T>
-		int createParameter(const std::string &name, const std::string &label, ParameterBase::DataTypes type,  T* valuePtr)
+		int createNumericParameter(const std::string &name, const std::string &label, T* valuePtr)
 		{
-			// check for numeric parameters
-			if ((type >= ParameterBase::FLOAT) && (type <= ParameterBase::UINT32))
-				m_parameters.push_back(std::shared_ptr<NumericParameter<T>>(new NumericParameter<T>(name, label, type, valuePtr)));
-			else
-				m_parameters.push_back(std::shared_ptr<Parameter<T>>(new Parameter<T>(name, label, type, valuePtr)));
+			m_parameters.push_back(std::shared_ptr<NumericParameter<T>>(new NumericParameter<T>(name, label, valuePtr)));
 			return static_cast<int>(m_parameters.size() - 1);
 		}
 
 		template<typename T>
-		int createParameter(const std::string &name, const std::string &label, ParameterBase::DataTypes type, Parameter::GetFunc<T> getValue, Parameter::SetFunc<T> setValue)
+		int createNumericParameter(const std::string &name, const std::string &label, Parameter::GetFunc<T> getValue, Parameter::SetFunc<T> setValue)
 		{
-			// check for numeric parameters
-			if ((type >= ParameterBase::FLOAT) && (type <= ParameterBase::UINT32))
-				m_parameters.push_back(std::shared_ptr<NumericParameter<T>>(new NumericParameter<T>(name, label, type, getValue, setValue)));
-			else
-				m_parameters.push_back(std::shared_ptr<Parameter<T>>(new Parameter<T>(name, label, type, getValue, setValue)));
+			m_parameters.push_back(std::shared_ptr<NumericParameter<T>>(new NumericParameter<T>(name, label, getValue, setValue)));
 			return static_cast<int>(m_parameters.size() - 1);
 		}
 
-		template<>
-		int createParameter<int>(const std::string &name, const std::string &label, ParameterBase::DataTypes type, int* valuePtr)
+		int createBoolParameter(const std::string &name, const std::string &label, bool* valuePtr)
 		{
-			if (type == ParameterBase::ENUM)
-				m_parameters.push_back(std::shared_ptr<EnumParameter>(new EnumParameter(name, label, type, valuePtr)));
-			else
-				m_parameters.push_back(std::shared_ptr<NumericParameter<int>>(new NumericParameter<int>(name, label, type, valuePtr)));
+			m_parameters.push_back(std::shared_ptr<Parameter<bool>>(new Parameter<bool>(name, label, ParameterBase::BOOL, valuePtr)));
 			return static_cast<int>(m_parameters.size() - 1);
 		}
 
-		template<>
-		int createParameter<int>(const std::string &name, const std::string &label, ParameterBase::DataTypes type, ParameterBase::GetFunc<int> getValue, ParameterBase::SetFunc<int> setValue)
+		int createBoolParameter(const std::string &name, const std::string &label, Parameter::GetFunc<bool> getValue, Parameter::SetFunc<bool> setValue)
 		{
-			if (type == ParameterBase::ENUM)
-				m_parameters.push_back(std::shared_ptr<EnumParameter>(new EnumParameter(name, label, type, getValue, setValue)));
-			else
-				m_parameters.push_back(std::shared_ptr<NumericParameter<int>>(new NumericParameter<int>(name, label, type, getValue, setValue)));
+			m_parameters.push_back(std::shared_ptr<Parameter<bool>>(new Parameter<bool>(name, label, ParameterBase::BOOL, getValue, setValue)));
+			return static_cast<int>(m_parameters.size() - 1);
+		}
+
+		int createEnumParameter(const std::string &name, const std::string &label, int* valuePtr)
+		{
+			m_parameters.push_back(std::shared_ptr<EnumParameter>(new EnumParameter(name, label, valuePtr)));
+			return static_cast<int>(m_parameters.size() - 1);
+		}
+
+		int createEnumParameter(const std::string &name, const std::string &label, ParameterBase::GetFunc<int> getValue, ParameterBase::SetFunc<int> setValue)
+		{
+			m_parameters.push_back(std::shared_ptr<EnumParameter>(new EnumParameter(name, label, getValue, setValue)));
+			return static_cast<int>(m_parameters.size() - 1);
+		}
+
+		int createStringParameter(const std::string &name, const std::string &label, std::string* valuePtr)
+		{
+			m_parameters.push_back(std::shared_ptr<Parameter<std::string>>(new Parameter<std::string>(name, label, ParameterBase::STRING, valuePtr)));
+			return static_cast<int>(m_parameters.size() - 1);
+		}
+
+		int createStringParameter(const std::string &name, const std::string &label, Parameter::GetFunc<std::string> getValue, Parameter::SetFunc<std::string> setValue)
+		{
+			m_parameters.push_back(std::shared_ptr<Parameter<std::string>>(new Parameter<std::string>(name, label, ParameterBase::STRING, getValue, setValue)));
 			return static_cast<int>(m_parameters.size() - 1);
 		}
 

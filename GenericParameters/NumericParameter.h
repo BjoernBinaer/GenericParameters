@@ -4,6 +4,7 @@
 #include <functional>
 #include <memory>
 #include "Parameter.h"
+#include <iostream>
 
 namespace GenParam
 {
@@ -17,14 +18,16 @@ namespace GenParam
 	public:
 		using Ptr = std::shared_ptr<NumericParameter<T>>;
 
-		NumericParameter(const std::string& name, const std::string& label,	ParameterBase::DataTypes type, T* valuePtr)
-			: Parameter<T>(name, label, type, valuePtr)
+		NumericParameter(const std::string& name, const std::string& label,	T* valuePtr)
+			: Parameter<T>(name, label, ParameterBase::INT32, valuePtr)
 		{
+			setType(m_minValue);
 		}
 
-		NumericParameter(const std::string& name, const std::string& label, ParameterBase::DataTypes type, GetFunc<T> getValue,	SetFunc<T> setValue)
-			: Parameter<T>(name, label, type, getValue, setValue)
+		NumericParameter(const std::string& name, const std::string& label, GetFunc<T> getValue,	SetFunc<T> setValue)
+			: Parameter<T>(name, label, ParameterBase::INT32, getValue, setValue)
 		{
+			setType(m_minValue);
 		}
 
 		virtual ~NumericParameter() {}
@@ -34,6 +37,18 @@ namespace GenParam
 		
 		T getMaxValue() const { return m_maxValue; }
 		void setMaxValue(const T val) { m_maxValue = val; }
+
+		template<typename TN>
+		void setType(TN v) {}
+
+		template<>	void setType<char>(char v) { m_type = DataTypes::INT8; }
+		template<>	void setType<short>(short v) { m_type = DataTypes::INT16; }
+		template<>	void setType<int>(int v) { m_type = DataTypes::INT32; }
+		template<>	void setType<unsigned char>(unsigned char v) { m_type = DataTypes::UINT8; }
+		template<>	void setType<unsigned short>(unsigned short v) { m_type = DataTypes::UINT16; }
+		template<>	void setType<unsigned int>(unsigned int v) { m_type = DataTypes::UINT32; }
+		template<>	void setType<float>(float v) { m_type = DataTypes::FLOAT; }
+		template<>	void setType<double>(double v) { m_type = DataTypes::DOUBLE; }
 	};
 
 	using FloatParameter = NumericParameter<float>;

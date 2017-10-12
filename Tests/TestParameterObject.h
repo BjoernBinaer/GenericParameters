@@ -13,6 +13,7 @@ namespace GenParam
 		double m_doubleValue;
 		int m_enumValue;
 		int m_enumValue2;
+		std::string m_strValue;
 
 	public:
 		static int MY_BOOL_PARAMETER;
@@ -20,6 +21,7 @@ namespace GenParam
 		static int MY_DOUBLE_PARAMETER;
 		static int MY_ENUM_PARAMETER;
 		static int MY_ENUM_PARAMETER2;
+		static int MY_STRING_PARAMETER;
 
 		static int MY_ENUM_VALUE1;
 		static int MY_ENUM_VALUE2;
