@@ -43,6 +43,7 @@ void paramTest()
 	const std::vector<EnumParameter::EnumValue>& enumValues = enumParam->getEnumValues();
 	assert(enumValues[0].name == "enum1");
 	assert(enumValues[1].name == "enum2");
+	assert(tc.getGroup(TestParameterObject::MY_ENUM_PARAMETER) == "EnumGroup");
 
 
 	std::cout << "Success\n";

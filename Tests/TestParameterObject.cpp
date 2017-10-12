@@ -32,6 +32,7 @@ void TestParameterObject::initParameters()
 	EnumParameter::Ptr enumParam = std::static_pointer_cast<EnumParameter>(getParameter(MY_ENUM_PARAMETER));
 	enumParam->addEnumValue("enum1", MY_ENUM_VALUE1);
 	enumParam->addEnumValue("enum2", MY_ENUM_VALUE2);
+	enumParam->setGroup("EnumGroup");
 }
 
 
