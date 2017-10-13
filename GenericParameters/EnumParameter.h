@@ -11,7 +11,7 @@ namespace GenParam
 	class EnumParameter : public Parameter<int>
 	{
 	public: 
-		using Ptr = std::shared_ptr<EnumParameter>;
+		using Ptr = std::unique_ptr<EnumParameter>;
 
 		struct EnumValue
 		{

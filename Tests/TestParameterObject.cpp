@@ -37,13 +37,13 @@ void TestParameterObject::initParameters()
 	MY_DOUBLE_PARAMETER = createNumericParameter("doubleParam", "Double param", getFct, setFct);
 	setGroup(MY_DOUBLE_PARAMETER, "ParameterGroup");
 	setDescription(MY_DOUBLE_PARAMETER, "Help text");
-	DoubleParameter::Ptr doubleParam = std::static_pointer_cast<DoubleParameter>(getParameter(MY_DOUBLE_PARAMETER));
+	DoubleParameter* doubleParam = static_cast<DoubleParameter*>(getParameter(MY_DOUBLE_PARAMETER));
 	doubleParam->setMinValue(0.1);
 	doubleParam->setMaxValue(0.9);
 
 	m_enumValue = 1;
 	MY_ENUM_PARAMETER = createEnumParameter("enumParam", "Enum param", &m_enumValue);
-	EnumParameter::Ptr enumParam = std::static_pointer_cast<EnumParameter>(getParameter(MY_ENUM_PARAMETER));
+	EnumParameter* enumParam = static_cast<EnumParameter*>(getParameter(MY_ENUM_PARAMETER));
 	enumParam->addEnumValue("enum1", MY_ENUM_VALUE1);
 	enumParam->addEnumValue("enum2", MY_ENUM_VALUE2);
 	enumParam->setGroup("EnumGroup");
@@ -52,7 +52,7 @@ void TestParameterObject::initParameters()
 	m_enumValue2 = 0;
 	ParameterBase::GetFunc<int> getFct2 = std::bind(&TestParameterObject::getEnumValue2, this);
 	MY_ENUM_PARAMETER2 = createEnumParameter("enumParam2", "Enum param 2", getFct2);
-	EnumParameter::Ptr enumParam2 = std::static_pointer_cast<EnumParameter>(getParameter(MY_ENUM_PARAMETER2));
+	EnumParameter* enumParam2 = static_cast<EnumParameter*>(getParameter(MY_ENUM_PARAMETER2));
 	enumParam2->addEnumValue("enum3", MY_ENUM2_VALUE1);
 	enumParam2->addEnumValue("enum4", MY_ENUM2_VALUE2);
 	enumParam2->setGroup("EnumGroup");

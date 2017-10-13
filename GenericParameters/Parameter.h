@@ -24,7 +24,7 @@ namespace GenParam
 			STRING
 		};
 
-		using Ptr = std::shared_ptr<ParameterBase>;
+		using Ptr = std::unique_ptr<ParameterBase>;
 		template <typename T>
 		using SetFunc = std::function<void(T)>;
 		template <typename T>

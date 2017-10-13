@@ -16,8 +16,6 @@ namespace GenParam
 		T m_maxValue;
 
 	public:
-		using Ptr = std::shared_ptr<NumericParameter<T>>;
-
 		NumericParameter(const std::string& name, const std::string& label,	T* valuePtr)
 			: Parameter<T>(name, label, ParameterBase::INT32, valuePtr)
 		{
