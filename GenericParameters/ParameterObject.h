@@ -82,9 +82,14 @@ namespace GenParam
 		template<typename T>
 		void setValue(const unsigned int parameterId, const T v) 
 		{
-			// ToDo: Warning ausgeben, wenn falscher Typ
-			Parameter<T>* param = static_cast<Parameter<T>*>(getParameter(parameterId));
-			param->setValue(v);
+			ParameterBase *paramBase = getParameter(parameterId);
+			if (paramBase->checkType(v))
+			{
+				Parameter<T>* param = static_cast<Parameter<T>*>(paramBase);
+				param->setValue(v);
+			}
+			else
+				std::cerr << "Type mismatch in setValue!" << std::endl;
 		}
 
 		void setVisible(const unsigned int parameterId, const bool v) { m_parameters[parameterId]->setVisible(v); }

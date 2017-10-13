@@ -31,6 +31,8 @@ void paramTest()
 	assert(intParam->getValue() == 3);
 	assert(tc.getValue<int>(TestParameterObject::MY_INT_PARAMETER) == 3);
 	assert(tc.getType(TestParameterObject::MY_INT_PARAMETER) == ParameterBase::INT32);
+	tc.setValue<int>(TestParameterObject::MY_INT_PARAMETER, 5);
+	assert(tc.getValue<int>(TestParameterObject::MY_INT_PARAMETER) == 5);
 
 	auto doubleParam = static_cast<DoubleParameter*>(tc.getParameter(TestParameterObject::MY_DOUBLE_PARAMETER));
 	assert(doubleParam->getValue() == 3.123);
@@ -67,8 +69,6 @@ void paramTest()
 	auto strParam = static_cast<StringParameter*>(tc.getParameter(TestParameterObject::MY_STRING_PARAMETER));
 	assert(tc.getValue<std::string>(TestParameterObject::MY_STRING_PARAMETER) == "test string");
 	assert(tc.getType(TestParameterObject::MY_STRING_PARAMETER) == ParameterBase::STRING);
-
-	tc.setValue(TestParameterObject::MY_BOOL_PARAMETER, 1.2324);
 
 	std::cout << "Success\n";
 }

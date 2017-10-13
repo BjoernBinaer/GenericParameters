@@ -61,6 +61,20 @@ namespace GenParam
 
 		GenParam::ParameterBase::DataTypes getType() const { return m_type; }
 
+		template<typename T>
+		bool checkType(T v) { return false; }
+
+		template<> bool checkType<char>(char v) { return m_type == INT8; }
+		template<> bool checkType<short>(short v) { return m_type == INT16; }
+		template<> bool checkType<int>(int v) { return (m_type == INT32) || (m_type == ENUM); }
+		template<> bool checkType<unsigned char>(unsigned char v) { return m_type == UINT8; }
+		template<> bool checkType<unsigned short>(unsigned short v) { return m_type == UINT16; }
+		template<> bool checkType<unsigned int>(unsigned int v) { return m_type == UINT32; }
+		template<> bool checkType<float>(float v) { return m_type == FLOAT; }
+		template<> bool checkType<double>(double v) { return m_type == DOUBLE; }
+		template<> bool checkType<bool>(bool v) { return m_type == BOOL; }
+		template<> bool checkType<std::string>(std::string v) { return m_type == STRING; }
+
 	protected:
 		std::string m_name;
 		std::string m_label;
