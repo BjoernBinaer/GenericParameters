@@ -40,7 +40,6 @@ namespace GenParam
 		void setIntValue(int val) { m_intValue = val; }
 
 		int getEnumValue2() const { return m_enumValue2; }
-		void setEnumValue2(int val) { m_enumValue2 = val; }
 	};
 }
 

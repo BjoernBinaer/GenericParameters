@@ -12,10 +12,10 @@ namespace GenParam
 	{
 	protected:
 		std::vector<std::shared_ptr<ParameterBase>> m_parameters;
-	
+
 	public:
 		ParameterObject() : m_parameters() {}
-		virtual ~ParameterObject() { m_parameters.clear();  }
+		virtual ~ParameterObject() { m_parameters.clear(); }
 
 		virtual void initParameters() {}
 		unsigned int numParameters() const { return static_cast<unsigned int>(m_parameters.size()); }
@@ -29,7 +29,7 @@ namespace GenParam
 		}
 
 		template<typename T>
-		int createNumericParameter(const std::string &name, const std::string &label, Parameter::GetFunc<T> getValue, Parameter::SetFunc<T> setValue)
+		int createNumericParameter(const std::string &name, const std::string &label, Parameter::GetFunc<T> getValue, Parameter::SetFunc<T> setValue = {})
 		{
 			m_parameters.push_back(std::shared_ptr<NumericParameter<T>>(new NumericParameter<T>(name, label, getValue, setValue)));
 			return static_cast<int>(m_parameters.size() - 1);
@@ -41,7 +41,7 @@ namespace GenParam
 			return static_cast<int>(m_parameters.size() - 1);
 		}
 
-		int createBoolParameter(const std::string &name, const std::string &label, Parameter::GetFunc<bool> getValue, Parameter::SetFunc<bool> setValue)
+		int createBoolParameter(const std::string &name, const std::string &label, Parameter::GetFunc<bool> getValue, Parameter::SetFunc<bool> setValue = {})
 		{
 			m_parameters.push_back(std::shared_ptr<Parameter<bool>>(new Parameter<bool>(name, label, ParameterBase::BOOL, getValue, setValue)));
 			return static_cast<int>(m_parameters.size() - 1);
@@ -53,7 +53,7 @@ namespace GenParam
 			return static_cast<int>(m_parameters.size() - 1);
 		}
 
-		int createEnumParameter(const std::string &name, const std::string &label, ParameterBase::GetFunc<int> getValue, ParameterBase::SetFunc<int> setValue)
+		int createEnumParameter(const std::string &name, const std::string &label, ParameterBase::GetFunc<int> getValue, ParameterBase::SetFunc<int> setValue = {})
 		{
 			m_parameters.push_back(std::shared_ptr<EnumParameter>(new EnumParameter(name, label, getValue, setValue)));
 			return static_cast<int>(m_parameters.size() - 1);
@@ -65,7 +65,7 @@ namespace GenParam
 			return static_cast<int>(m_parameters.size() - 1);
 		}
 
-		int createStringParameter(const std::string &name, const std::string &label, Parameter::GetFunc<std::string> getValue, Parameter::SetFunc<std::string> setValue)
+		int createStringParameter(const std::string &name, const std::string &label, Parameter::GetFunc<std::string> getValue, Parameter::SetFunc<std::string> setValue = {})
 		{
 			m_parameters.push_back(std::shared_ptr<Parameter<std::string>>(new Parameter<std::string>(name, label, ParameterBase::STRING, getValue, setValue)));
 			return static_cast<int>(m_parameters.size() - 1);

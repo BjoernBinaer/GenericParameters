@@ -44,12 +44,25 @@ void paramTest()
 	auto enumParam = std::static_pointer_cast<EnumParameter>(tc.getParameter(TestParameterObject::MY_ENUM_PARAMETER));
 	assert(enumParam->getValue() == TestParameterObject::MY_ENUM_VALUE2);
 	assert(tc.getValue<int>(TestParameterObject::MY_ENUM_PARAMETER) == TestParameterObject::MY_ENUM_VALUE2);
-
 	const std::vector<EnumParameter::EnumValue>& enumValues = enumParam->getEnumValues();
 	assert(enumValues[0].name == "enum1");
 	assert(enumValues[1].name == "enum2");
 	assert(tc.getGroup(TestParameterObject::MY_ENUM_PARAMETER) == "EnumGroup");
 	assert(tc.getType(TestParameterObject::MY_ENUM_PARAMETER) == ParameterBase::ENUM);
+
+
+ 	auto enumParam2 = std::static_pointer_cast<EnumParameter>(tc.getParameter(TestParameterObject::MY_ENUM_PARAMETER2));
+ 	assert(enumParam2->getValue() == TestParameterObject::MY_ENUM2_VALUE1);
+ 	assert(tc.getValue<int>(TestParameterObject::MY_ENUM_PARAMETER2) == TestParameterObject::MY_ENUM2_VALUE1);
+ 	const std::vector<EnumParameter::EnumValue>& enumValues2 = enumParam2->getEnumValues();
+ 	assert(enumValues2[0].name == "enum3");
+ 	assert(enumValues2[1].name == "enum4");
+ 	assert(tc.getGroup(TestParameterObject::MY_ENUM_PARAMETER2) == "ParameterGroup");
+ 	assert(tc.getType(TestParameterObject::MY_ENUM_PARAMETER2) == ParameterBase::ENUM);
+	assert(tc.getReadOnly(TestParameterObject::MY_ENUM_PARAMETER2) == true);
+	tc.setValue<int>(TestParameterObject::MY_ENUM_PARAMETER2, TestParameterObject::MY_ENUM2_VALUE2);
+	assert(tc.getValue<int>(TestParameterObject::MY_ENUM_PARAMETER2) == TestParameterObject::MY_ENUM2_VALUE1);
+
 
 	auto strParam = std::static_pointer_cast<StringParameter>(tc.getParameter(TestParameterObject::MY_STRING_PARAMETER));
 	assert(tc.getValue<std::string>(TestParameterObject::MY_STRING_PARAMETER) == "test string");

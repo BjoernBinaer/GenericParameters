@@ -54,7 +54,7 @@ namespace GenParam
 		void setDescription(const std::string &val) { m_description = val; }
 
 		bool getReadOnly() const { return m_readOnly; }
-		void setReadOnly(const bool val) { m_readOnly = val; }
+		virtual void setReadOnly(const bool val) { m_readOnly = val; }
 
 		bool getVisible() const { return m_visible; }
 		void setVisible(const bool val) { m_visible = val; }
@@ -90,12 +90,25 @@ namespace GenParam
 			: ParameterBase(name, label, type),
 			m_getValue(getValue), m_setValue(setValue)
 		{
+			if (m_setValue == nullptr)
+				m_readOnly = true;
 		}
 
-		void setValue(const T v) { m_setValue(v); }
+		void setValue(const T v) 
+		{
+			if (m_setValue != nullptr) 
+				m_setValue(v); 
+		}
 		T getValue() const { return m_getValue(); }
 
 		virtual ~Parameter() {}
+
+		virtual void setReadOnly(const bool val) 
+		{
+			m_readOnly = val; 
+			if (m_setValue == nullptr)
+				m_readOnly = true;
+		}
 	};
 
 	using BoolParameter = Parameter<bool>;

@@ -51,14 +51,14 @@ void TestParameterObject::initParameters()
 
 	m_enumValue2 = 0;
 	ParameterBase::GetFunc<int> getFct2 = std::bind(&TestParameterObject::getEnumValue2, this);
-	ParameterBase::SetFunc<int> setFct2 = std::bind(&TestParameterObject::setEnumValue2, this, std::placeholders::_1);
-	MY_ENUM_PARAMETER2 = createEnumParameter("enumParam", "Enum param", getFct2, setFct2);
-	EnumParameter::Ptr enumParam2 = std::static_pointer_cast<EnumParameter>(getParameter(MY_ENUM_PARAMETER));
-	enumParam2->addEnumValue("enum1", MY_ENUM2_VALUE1);
-	enumParam2->addEnumValue("enum2", MY_ENUM2_VALUE2);
+	MY_ENUM_PARAMETER2 = createEnumParameter("enumParam2", "Enum param 2", getFct2);
+	EnumParameter::Ptr enumParam2 = std::static_pointer_cast<EnumParameter>(getParameter(MY_ENUM_PARAMETER2));
+	enumParam2->addEnumValue("enum3", MY_ENUM2_VALUE1);
+	enumParam2->addEnumValue("enum4", MY_ENUM2_VALUE2);
 	enumParam2->setGroup("EnumGroup");
 	setGroup(MY_ENUM_PARAMETER2, "ParameterGroup");
 	setDescription(MY_ENUM_PARAMETER2, "Help text");
+	setReadOnly(MY_ENUM_PARAMETER2, false);		// Has no influence. Since there is no set function, this must be read-only.
 
 	m_strValue = "test string";
 	MY_STRING_PARAMETER = createStringParameter("strParam", "String param", &m_strValue);
