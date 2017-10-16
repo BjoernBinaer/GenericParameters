@@ -30,7 +30,7 @@ namespace GenParam
 		}
 
 		template<typename T>
-		int createNumericParameter(const std::string &name, const std::string &label, Parameter::GetFunc<T> getValue, Parameter::SetFunc<T> setValue = {})
+		int createNumericParameter(const std::string &name, const std::string &label, Parameter<T>::GetFunc<T> getValue, Parameter<T>::SetFunc<T> setValue = {})
 		{
 			m_parameters.push_back(std::unique_ptr<NumericParameter<T>>(new NumericParameter<T>(name, label, getValue, setValue)));
 			return static_cast<int>(m_parameters.size() - 1);
@@ -42,7 +42,7 @@ namespace GenParam
 			return static_cast<int>(m_parameters.size() - 1);
 		}
 
-		int createBoolParameter(const std::string &name, const std::string &label, Parameter::GetFunc<bool> getValue, Parameter::SetFunc<bool> setValue = {})
+		int createBoolParameter(const std::string &name, const std::string &label, Parameter<bool>::GetFunc<bool> getValue, Parameter<bool>::SetFunc<bool> setValue = {})
 		{
 			m_parameters.push_back(std::unique_ptr<Parameter<bool>>(new Parameter<bool>(name, label, ParameterBase::BOOL, getValue, setValue)));
 			return static_cast<int>(m_parameters.size() - 1);
@@ -66,7 +66,7 @@ namespace GenParam
 			return static_cast<int>(m_parameters.size() - 1);
 		}
 
-		int createStringParameter(const std::string &name, const std::string &label, Parameter::GetFunc<std::string> getValue, Parameter::SetFunc<std::string> setValue = {})
+		int createStringParameter(const std::string &name, const std::string &label, Parameter<std::string>::GetFunc<std::string> getValue, Parameter<std::string>::SetFunc<std::string> setValue = {})
 		{
 			m_parameters.push_back(std::unique_ptr<Parameter<std::string>>(new Parameter<std::string>(name, label, ParameterBase::STRING, getValue, setValue)));
 			return static_cast<int>(m_parameters.size() - 1);
