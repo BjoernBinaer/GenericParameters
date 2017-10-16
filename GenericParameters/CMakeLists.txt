@@ -1,10 +1,8 @@
-add_library(GenericParameters    	
-	Parameter.h
-	EnumParameter.h
-	NumericParameter.h
-	ParameterObject.h
+add_library(GenericParameters INTERFACE)
 
-	CMakeLists.txt	
-)
-
-set_target_properties(GenericParameters PROPERTIES LINKER_LANGUAGE CXX)
+target_sources(GenericParameters INTERFACE 
+	${CMAKE_CURRENT_LIST_DIR}/Parameter.h
+	${CMAKE_CURRENT_LIST_DIR}/EnumParameter.h
+	${CMAKE_CURRENT_LIST_DIR}/NumericParameter.h
+	${CMAKE_CURRENT_LIST_DIR}/ParameterObject.h
+	)

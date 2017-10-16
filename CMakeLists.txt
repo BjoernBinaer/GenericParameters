@@ -10,11 +10,14 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 include(${PROJECT_PATH}/CMake/Common.cmake)
 
-subdirs(
-  GenericParameters
-  Tests
-  )
+add_subdirectory(GenericParameters)
+  
+if(NOT GENERICPARAMETERS_NO_TESTS)
+	add_subdirectory(Tests)
+endif()
 
-
+install(DIRECTORY ./GenericParameters
+DESTINATION include
+FILES_MATCHING PATTERN "*.h")
 
 

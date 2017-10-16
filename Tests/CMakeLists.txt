@@ -6,5 +6,5 @@ add_executable(	ParameterTest
 				CMakeLists.txt
 			)
 
-add_dependencies(ParameterTest GenericParameters)
+target_link_libraries(ParameterTest GenericParameters)
 set_target_properties(ParameterTest PROPERTIES FOLDER "Tests")
