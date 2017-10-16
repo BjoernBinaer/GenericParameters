@@ -16,8 +16,4 @@ if(NOT GENERICPARAMETERS_NO_TESTS)
 	add_subdirectory(Tests)
 endif()
 
-install(DIRECTORY ./GenericParameters
-DESTINATION include
-FILES_MATCHING PATTERN "*.h")
-
 

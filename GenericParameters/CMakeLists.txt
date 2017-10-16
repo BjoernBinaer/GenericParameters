@@ -6,3 +6,9 @@ target_sources(GenericParameters INTERFACE
 	${CMAKE_CURRENT_LIST_DIR}/NumericParameter.h
 	${CMAKE_CURRENT_LIST_DIR}/ParameterObject.h
 	)
+
+
+install(DIRECTORY ./
+DESTINATION include
+FILES_MATCHING PATTERN "*.h")
+	
