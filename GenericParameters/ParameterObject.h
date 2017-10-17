@@ -5,6 +5,7 @@
 #include <memory>
 #include "NumericParameter.h"
 #include "EnumParameter.h"
+#include "VectorParameter.h"
 
 namespace GenParam
 {
@@ -69,6 +70,20 @@ namespace GenParam
 		int createStringParameter(const std::string &name, const std::string &label, Parameter<std::string>::GetFunc<std::string> getValue, Parameter<std::string>::SetFunc<std::string> setValue = {})
 		{
 			m_parameters.push_back(std::unique_ptr<Parameter<std::string>>(new Parameter<std::string>(name, label, ParameterBase::STRING, getValue, setValue)));
+			return static_cast<int>(m_parameters.size() - 1);
+		}
+
+		template<typename T>
+		int createVectorParameter(const std::string &name, const std::string &label, const unsigned int dim, T* valuePtr)
+		{
+			m_parameters.push_back(std::unique_ptr<VectorParameter<T>>(new VectorParameter<T>(name, label, dim, valuePtr)));
+			return static_cast<int>(m_parameters.size() - 1);
+		}
+
+		template<typename T>
+		int createVectorParameter(const std::string &name, const std::string &label, const unsigned int dim, Parameter<T>::GetFunc<T> getVecValue, Parameter<T>::SetVecFunc<T> setValue = {})
+		{
+			m_parameters.push_back(std::unique_ptr<VectorParameter<T>>(new VectorParameter<T>(name, label, dim, getVecValue, setVecValue)));
 			return static_cast<int>(m_parameters.size() - 1);
 		}
 

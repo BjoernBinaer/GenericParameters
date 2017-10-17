@@ -11,6 +11,7 @@ int GenParam::TestParameterObject::MY_DOUBLE_PARAMETER = -1;
 int GenParam::TestParameterObject::MY_ENUM_PARAMETER = -1;
 int GenParam::TestParameterObject::MY_ENUM_PARAMETER2 = -1;
 int GenParam::TestParameterObject::MY_STRING_PARAMETER = -1;
+int GenParam::TestParameterObject::MY_VEC3_PARAMETER = -1;
 
 int GenParam::TestParameterObject::MY_ENUM_VALUE1 = -1;
 int GenParam::TestParameterObject::MY_ENUM_VALUE2 = -1;
@@ -64,6 +65,14 @@ void TestParameterObject::initParameters()
 	MY_STRING_PARAMETER = createStringParameter("strParam", "String param", &m_strValue);
 	setGroup(MY_STRING_PARAMETER, "ParameterGroup");
 	setDescription(MY_STRING_PARAMETER, "Help text");
+
+	m_vec3Value[0] = 1.1;
+	m_vec3Value[1] = 2.2;
+	m_vec3Value[2] = -3.5;
+	MY_VEC3_PARAMETER = createVectorParameter("vec3Param", "Vector3 param", 3, &m_vec3Value[0]);
+	setGroup(MY_VEC3_PARAMETER, "ParameterGroup");
+	setDescription(MY_VEC3_PARAMETER, "Help text");
+
 }
 
 
