@@ -99,10 +99,24 @@ namespace GenParam
 		{
 			ParameterBase *paramBase = getParameter(parameterId);
 			if (paramBase->checkType(v))
-			{
-				Parameter<T>* param = static_cast<Parameter<T>*>(paramBase);
-				param->setValue(v);
-			}
+				static_cast<Parameter<T>*>(paramBase)->setValue(v);
+			else
+				std::cerr << "Type mismatch in setValue!" << std::endl;
+		}
+
+		template<typename T>
+		T* getVecValue(const unsigned int parameterId) const
+		{
+			VectorParameter<T>* param = static_cast<VectorParameter<T>*>(getParameter(parameterId));
+			return param->getValue();
+		}
+
+		template<typename T>
+		void setVecValue(const unsigned int parameterId, T *v)
+		{
+			ParameterBase *paramBase = getParameter(parameterId);
+			if (paramBase->checkType(v))
+				static_cast<VectorParameter<T>*>(paramBase)->setValue(v);
 			else
 				std::cerr << "Type mismatch in setValue!" << std::endl;
 		}

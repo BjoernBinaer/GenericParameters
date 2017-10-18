@@ -20,6 +20,14 @@ namespace GenParam
 			UINT8,
 			UINT16, 
 			UINT32,
+			VEC_FLOAT,
+			VEC_DOUBLE,
+			VEC_INT8,
+			VEC_INT16,
+			VEC_INT32,
+			VEC_UINT8,
+			VEC_UINT16,
+			VEC_UINT32,
 			ENUM, 
 			STRING
 		};
@@ -72,6 +80,14 @@ namespace GenParam
 		template<> bool checkType<unsigned int>(unsigned int v) { return m_type == UINT32; }
 		template<> bool checkType<float>(float v) { return m_type == FLOAT; }
 		template<> bool checkType<double>(double v) { return m_type == DOUBLE; }
+		template<> bool checkType<char*>(char *v) { return m_type == VEC_INT8; }
+		template<> bool checkType<short*>(short *v) { return m_type == VEC_INT16; }
+		template<> bool checkType<int*>(int *v) { return (m_type == VEC_INT32); }
+		template<> bool checkType<unsigned char*>(unsigned char *v) { return m_type == VEC_UINT8; }
+		template<> bool checkType<unsigned short*>(unsigned short *v) { return m_type == VEC_UINT16; }
+		template<> bool checkType<unsigned int*>(unsigned int *v) { return m_type == VEC_UINT32; }
+		template<> bool checkType<float*>(float *v) { return m_type == VEC_FLOAT; }
+		template<> bool checkType<double*>(double *v) { return m_type == VEC_DOUBLE; }
 		template<> bool checkType<bool>(bool v) { return m_type == BOOL; }
 		template<> bool checkType<std::string>(std::string v) { return m_type == STRING; }
 

@@ -25,7 +25,7 @@ namespace GenParam
 			m_getVecValue = [valuePtr]() { return valuePtr; };
 			m_setVecValue = [valuePtr, dim](T* value)
 			{
-				std::copy(value, value + dim, valuePtr);
+				memcpy(valuePtr, value, dim*sizeof(T));
 			};
 		}
 
@@ -39,20 +39,34 @@ namespace GenParam
 		}
 
 		virtual ~VectorParameter() {}
+
+		void setValue(T *v)
+		{
+			if (m_setVecValue != nullptr)
+				m_setVecValue(v);
+		}
+		T* getValue() const { return m_getVecValue(); }
+
+		virtual void setReadOnly(const bool val)
+		{
+			m_readOnly = val;
+			if (m_setVecValue == nullptr)
+				m_readOnly = true;
+		}
 		
 		template<typename TN>
 		void setType(TN v) {}
 
-		unsigned int get_dim() const { return m_dim; }
+		unsigned int getDim() const { return m_dim; }
 
-		template<>	void setType<char>(char v) { m_type = DataTypes::INT8; }
-		template<>	void setType<short>(short v) { m_type = DataTypes::INT16; }
-		template<>	void setType<int>(int v) { m_type = DataTypes::INT32; }
-		template<>	void setType<unsigned char>(unsigned char v) { m_type = DataTypes::UINT8; }
-		template<>	void setType<unsigned short>(unsigned short v) { m_type = DataTypes::UINT16; }
-		template<>	void setType<unsigned int>(unsigned int v) { m_type = DataTypes::UINT32; }
-		template<>	void setType<float>(float v) { m_type = DataTypes::FLOAT; }
-		template<>	void setType<double>(double v) { m_type = DataTypes::DOUBLE; }
+		template<>	void setType<char>(char v) { m_type = DataTypes::VEC_INT8; }
+		template<>	void setType<short>(short v) { m_type = DataTypes::VEC_INT16; }
+		template<>	void setType<int>(int v) { m_type = DataTypes::VEC_INT32; }
+		template<>	void setType<unsigned char>(unsigned char v) { m_type = DataTypes::VEC_UINT8; }
+		template<>	void setType<unsigned short>(unsigned short v) { m_type = DataTypes::VEC_UINT16; }
+		template<>	void setType<unsigned int>(unsigned int v) { m_type = DataTypes::VEC_UINT32; }
+		template<>	void setType<float>(float v) { m_type = DataTypes::VEC_FLOAT; }
+		template<>	void setType<double>(double v) { m_type = DataTypes::VEC_DOUBLE; }
 	};
 
 	using FloatVectorParameter = VectorParameter<float>;

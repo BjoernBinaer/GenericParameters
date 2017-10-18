@@ -70,5 +70,20 @@ void paramTest()
 	assert(tc.getValue<std::string>(TestParameterObject::MY_STRING_PARAMETER) == "test string");
 	assert(tc.getType(TestParameterObject::MY_STRING_PARAMETER) == ParameterBase::STRING);
 
+	auto vec3Param = static_cast<DoubleVectorParameter*>(tc.getParameter(TestParameterObject::MY_VEC3_PARAMETER));
+	double *vecValue;
+	vecValue = vec3Param->getValue();
+	assert(vecValue[0] == 1.1);
+	assert(vecValue[1] == 2.2);
+	assert(vecValue[2] == -3.5);
+	assert(vecValue == tc.getVecValue<double>(TestParameterObject::MY_VEC3_PARAMETER));
+	double newVec[3] = { 2,3,4.5 };
+ 	tc.setVecValue<double>(TestParameterObject::MY_VEC3_PARAMETER, newVec);
+	vecValue = vec3Param->getValue();
+	assert(vecValue[0] == 2.0);
+	assert(vecValue[1] == 3);
+	assert(vecValue[2] == 4.5);
+ 	assert(tc.getType(TestParameterObject::MY_VEC3_PARAMETER) == ParameterBase::VEC_DOUBLE);
+
 	std::cout << "Success\n";
 }
