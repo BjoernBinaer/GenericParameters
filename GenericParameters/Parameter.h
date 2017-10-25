@@ -43,7 +43,7 @@ namespace GenParam
 		using GetVecFunc = std::function<T* ()>;
 
 		ParameterBase(const std::string& name, const std::string& label, const DataTypes type) :
-			m_name(name), m_label(label), m_group(""), m_description(""), m_type(type), m_readOnly(false), m_visible(true)
+			m_name(name), m_label(label), m_group(""), m_description(""), m_hotKey(""), m_type(type), m_readOnly(false), m_visible(true)
 		{
 		}
 
@@ -60,6 +60,9 @@ namespace GenParam
 
 		std::string getDescription() const { return m_description; }
 		void setDescription(const std::string &val) { m_description = val; }
+
+		std::string getHotKey() const { return m_hotKey; }
+		void setHotKey(const std::string &val) { m_hotKey = val; }
 
 		bool getReadOnly() const { return m_readOnly; }
 		virtual void setReadOnly(const bool val) { m_readOnly = val; }
@@ -96,6 +99,7 @@ namespace GenParam
 		std::string m_label;
 		std::string m_group;
 		std::string m_description;
+		std::string m_hotKey;
 		DataTypes m_type;
 		bool m_readOnly;
 		bool m_visible; 
