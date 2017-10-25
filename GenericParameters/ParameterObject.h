@@ -139,6 +139,9 @@ namespace GenParam
 		void setDescription(const unsigned int parameterId, const std::string &v) { m_parameters[parameterId]->setDescription(v); }
 		std::string getDescription(const unsigned int parameterId) { return m_parameters[parameterId]->getDescription(); }
 
+		void setHotKey(const unsigned int parameterId, const std::string &v) { m_parameters[parameterId]->setHotKey(v); }
+		std::string getHotKey(const unsigned int parameterId) { return m_parameters[parameterId]->getHotKey(); }
+
 		GenParam::ParameterBase::DataTypes getType(const unsigned int parameterId) const { return m_parameters[parameterId]->getType(); }
 	};
 
