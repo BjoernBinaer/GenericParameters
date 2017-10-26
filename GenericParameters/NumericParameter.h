@@ -5,6 +5,8 @@
 #include <memory>
 #include "Parameter.h"
 #include <iostream>
+#include <float.h>
+#include <algorithm>
 
 namespace GenParam
 {
@@ -20,12 +22,17 @@ namespace GenParam
 			: Parameter<T>(name, label, ParameterBase::INT32, valuePtr)
 		{
 			setType(m_minValue);
+			m_maxValue = std::numeric_limits<T>::max();
+			m_minValue = std::numeric_limits<T>::lowest();
+			m_setValue = [&, valuePtr](T value) { *valuePtr = std::max(std::min(value, m_maxValue), m_minValue); };
 		}
 
-		NumericParameter(const std::string& name, const std::string& label, GetFunc<T> getValue,	SetFunc<T> setValue)
+		NumericParameter(const std::string& name, const std::string& label, GetFunc<T> getValue, SetFunc<T> setValue)
 			: Parameter<T>(name, label, ParameterBase::INT32, getValue, setValue)
 		{
 			setType(m_minValue);
+			m_maxValue = std::numeric_limits<T>::max(); 
+			m_minValue = std::numeric_limits<T>::lowest();
 		}
 
 		virtual ~NumericParameter() {}

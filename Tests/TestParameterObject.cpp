@@ -31,6 +31,9 @@ void TestParameterObject::initParameters()
 	MY_INT_PARAMETER = createNumericParameter("intParam", "Int param", &m_intValue);
 	setGroup(MY_INT_PARAMETER, "ParameterGroup");
 	setDescription(MY_INT_PARAMETER, "Help text");
+	IntParameter* intParam = static_cast<IntParameter*>(getParameter(MY_INT_PARAMETER));
+	intParam->setMinValue(2);
+	intParam->setMaxValue(4);
 
 	setDoubleValue(3.123);
 	ParameterBase::GetFunc<double> getFct = std::bind(&TestParameterObject::getDoubleValue, this);
@@ -39,8 +42,8 @@ void TestParameterObject::initParameters()
 	setGroup(MY_DOUBLE_PARAMETER, "ParameterGroup");
 	setDescription(MY_DOUBLE_PARAMETER, "Help text");
 	DoubleParameter* doubleParam = static_cast<DoubleParameter*>(getParameter(MY_DOUBLE_PARAMETER));
-	doubleParam->setMinValue(0.1);
-	doubleParam->setMaxValue(0.9);
+ 	doubleParam->setMinValue(0.1);
+ 	doubleParam->setMaxValue(0.9);
 
 	m_enumValue = 1;
 	MY_ENUM_PARAMETER = createEnumParameter("enumParam", "Enum param", &m_enumValue);

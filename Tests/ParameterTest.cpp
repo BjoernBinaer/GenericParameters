@@ -31,14 +31,19 @@ void paramTest()
 	assert(intParam->getValue() == 3);
 	assert(tc.getValue<int>(TestParameterObject::MY_INT_PARAMETER) == 3);
 	assert(tc.getType(TestParameterObject::MY_INT_PARAMETER) == ParameterBase::INT32);
+	// check max
 	tc.setValue<int>(TestParameterObject::MY_INT_PARAMETER, 5);
-	assert(tc.getValue<int>(TestParameterObject::MY_INT_PARAMETER) == 5);
+	assert(tc.getValue<int>(TestParameterObject::MY_INT_PARAMETER) == 4);
+	// check min
+	tc.setValue<int>(TestParameterObject::MY_INT_PARAMETER, -2);
+	assert(tc.getValue<int>(TestParameterObject::MY_INT_PARAMETER) == 2);
 
 	auto doubleParam = static_cast<DoubleParameter*>(tc.getParameter(TestParameterObject::MY_DOUBLE_PARAMETER));
 	assert(doubleParam->getValue() == 3.123);
 	assert(tc.getValue<double>(TestParameterObject::MY_DOUBLE_PARAMETER) == 3.123);
 	tc.setValue<double>(TestParameterObject::MY_DOUBLE_PARAMETER, 4.85);
 	assert(tc.getValue<double>(TestParameterObject::MY_DOUBLE_PARAMETER) == 4.85);
+
 	assert(doubleParam->getMinValue() == 0.1);
 	assert(doubleParam->getMaxValue() == 0.9);
 	assert(tc.getType(TestParameterObject::MY_DOUBLE_PARAMETER) == ParameterBase::DOUBLE);
