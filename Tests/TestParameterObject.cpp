@@ -38,7 +38,7 @@ void TestParameterObject::initParameters()
 	setDoubleValue(3.123);
 	ParameterBase::GetFunc<double> getFct = std::bind(&TestParameterObject::getDoubleValue, this);
 	ParameterBase::SetFunc<double> setFct = std::bind(&TestParameterObject::setDoubleValue, this, std::placeholders::_1);
-	MY_DOUBLE_PARAMETER = createNumericParameter("doubleParam", "Double param", getFct, setFct);
+	MY_DOUBLE_PARAMETER = createNumericParameter<double>("doubleParam", "Double param", getFct, setFct);
 	setGroup(MY_DOUBLE_PARAMETER, "ParameterGroup");
 	setDescription(MY_DOUBLE_PARAMETER, "Help text");
 	DoubleParameter* doubleParam = static_cast<DoubleParameter*>(getParameter(MY_DOUBLE_PARAMETER));
