@@ -31,7 +31,7 @@ namespace GenParam
 		}
 
 		template<typename T>
-		int createNumericParameter(const std::string &name, const std::string &label, Parameter<T>::GetFunc<T> getValue, Parameter<T>::SetFunc<T> setValue = {})
+		int createNumericParameter(const std::string &name, const std::string &label, ParameterBase::GetFunc<T> getValue, ParameterBase::SetFunc<T> setValue = {})
 		{
 			m_parameters.push_back(std::unique_ptr<NumericParameter<T>>(new NumericParameter<T>(name, label, getValue, setValue)));
 			return static_cast<int>(m_parameters.size() - 1);
@@ -81,7 +81,7 @@ namespace GenParam
 		}
 
 		template<typename T>
-		int createVectorParameter(const std::string &name, const std::string &label, const unsigned int dim, Parameter<T>::GetFunc<T> getVecValue, Parameter<T>::SetVecFunc<T> setValue = {})
+		int createVectorParameter(const std::string &name, const std::string &label, const unsigned int dim, ParameterBase::GetFunc<T> getVecValue, ParameterBase::SetVecFunc<T> setValue = {})
 		{
 			m_parameters.push_back(std::unique_ptr<VectorParameter<T>>(new VectorParameter<T>(name, label, dim, getVecValue, setVecValue)));
 			return static_cast<int>(m_parameters.size() - 1);

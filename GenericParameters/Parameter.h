@@ -75,24 +75,25 @@ namespace GenParam
 		template<typename T>
 		bool checkType(T v) { return false; }
 
-		template<> bool checkType<char>(char v) { return m_type == INT8; }
-		template<> bool checkType<short>(short v) { return m_type == INT16; }
-		template<> bool checkType<int>(int v) { return (m_type == INT32) || (m_type == ENUM); }
-		template<> bool checkType<unsigned char>(unsigned char v) { return m_type == UINT8; }
-		template<> bool checkType<unsigned short>(unsigned short v) { return m_type == UINT16; }
-		template<> bool checkType<unsigned int>(unsigned int v) { return m_type == UINT32; }
-		template<> bool checkType<float>(float v) { return m_type == FLOAT; }
-		template<> bool checkType<double>(double v) { return m_type == DOUBLE; }
-		template<> bool checkType<char*>(char *v) { return m_type == VEC_INT8; }
-		template<> bool checkType<short*>(short *v) { return m_type == VEC_INT16; }
-		template<> bool checkType<int*>(int *v) { return (m_type == VEC_INT32); }
-		template<> bool checkType<unsigned char*>(unsigned char *v) { return m_type == VEC_UINT8; }
-		template<> bool checkType<unsigned short*>(unsigned short *v) { return m_type == VEC_UINT16; }
-		template<> bool checkType<unsigned int*>(unsigned int *v) { return m_type == VEC_UINT32; }
-		template<> bool checkType<float*>(float *v) { return m_type == VEC_FLOAT; }
-		template<> bool checkType<double*>(double *v) { return m_type == VEC_DOUBLE; }
-		template<> bool checkType<bool>(bool v) { return m_type == BOOL; }
-		template<> bool checkType<std::string>(std::string v) { return m_type == STRING; }
+		bool checkType(char v) { return m_type == INT8; }
+		bool checkType(short v) { return m_type == INT16; }
+		bool checkType(int v) { return (m_type == INT32) || (m_type == ENUM); }
+		bool checkType(unsigned char v) { return m_type == UINT8; }
+		bool checkType(unsigned short v) { return m_type == UINT16; }
+		bool checkType(unsigned int v) { return m_type == UINT32; }
+		bool checkType(float v) { return m_type == FLOAT; }
+		bool checkType(double v) { return m_type == DOUBLE; }
+		bool checkType(char *v) { return m_type == VEC_INT8; }
+		bool checkType(short *v) { return m_type == VEC_INT16; }
+		bool checkType(int *v) { return (m_type == VEC_INT32); }
+		bool checkType(unsigned char *v) { return m_type == VEC_UINT8; }
+		bool checkType(unsigned short *v) { return m_type == VEC_UINT16; }
+		bool checkType(unsigned int *v) { return m_type == VEC_UINT32; }
+		bool checkType(float *v) { return m_type == VEC_FLOAT; }
+		bool checkType(double *v) { return m_type == VEC_DOUBLE; }
+		bool checkType(bool v) { return m_type == BOOL; }
+		bool checkType(std::string v) { return m_type == STRING; }
+
 
 	protected:
 		std::string m_name;

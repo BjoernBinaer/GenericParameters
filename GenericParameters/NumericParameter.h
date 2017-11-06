@@ -18,16 +18,16 @@ namespace GenParam
 		T m_maxValue;
 
 	public:
-		NumericParameter(const std::string& name, const std::string& label,	T* valuePtr)
+		NumericParameter(const std::string& name, const std::string& label, T* valuePtr)
 			: Parameter<T>(name, label, ParameterBase::INT32, valuePtr)
 		{
 			setType(m_minValue);
 			m_maxValue = std::numeric_limits<T>::max();
 			m_minValue = std::numeric_limits<T>::lowest();
-			m_setValue = [&, valuePtr](T value) { *valuePtr = std::max(std::min(value, m_maxValue), m_minValue); };
+			Parameter<T>::m_setValue = [&, valuePtr](T value) { *valuePtr = std::max(std::min(value, m_maxValue), m_minValue); };
 		}
 
-		NumericParameter(const std::string& name, const std::string& label, GetFunc<T> getValue, SetFunc<T> setValue)
+		NumericParameter(const std::string& name, const std::string& label, ParameterBase::GetFunc<T> getValue, ParameterBase::SetFunc<T> setValue)
 			: Parameter<T>(name, label, ParameterBase::INT32, getValue, setValue)
 		{
 			setType(m_minValue);
@@ -46,14 +46,14 @@ namespace GenParam
 		template<typename TN>
 		void setType(TN v) {}
 
-		template<>	void setType<char>(char v) { m_type = DataTypes::INT8; }
-		template<>	void setType<short>(short v) { m_type = DataTypes::INT16; }
-		template<>	void setType<int>(int v) { m_type = DataTypes::INT32; }
-		template<>	void setType<unsigned char>(unsigned char v) { m_type = DataTypes::UINT8; }
-		template<>	void setType<unsigned short>(unsigned short v) { m_type = DataTypes::UINT16; }
-		template<>	void setType<unsigned int>(unsigned int v) { m_type = DataTypes::UINT32; }
-		template<>	void setType<float>(float v) { m_type = DataTypes::FLOAT; }
-		template<>	void setType<double>(double v) { m_type = DataTypes::DOUBLE; }
+		void setType(char v) { ParameterBase::m_type = ParameterBase::DataTypes::INT8; }
+		void setType(short v) { ParameterBase::m_type = ParameterBase::DataTypes::INT16; }
+		void setType(int v) { ParameterBase::m_type = ParameterBase::DataTypes::INT32; }
+		void setType(unsigned char v) { ParameterBase::m_type = ParameterBase::DataTypes::UINT8; }
+		void setType(unsigned short v) { ParameterBase::m_type = ParameterBase::DataTypes::UINT16; }
+		void setType(unsigned int v) { ParameterBase::m_type = ParameterBase::DataTypes::UINT32; }
+		void setType(float v) { ParameterBase::m_type = ParameterBase::DataTypes::FLOAT; }
+		void setType(double v) { ParameterBase::m_type = ParameterBase::DataTypes::DOUBLE; }
 	};
 
 	using FloatParameter = NumericParameter<float>;

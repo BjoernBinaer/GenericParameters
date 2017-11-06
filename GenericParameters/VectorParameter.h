@@ -3,6 +3,7 @@
 
 #include <functional>
 #include <memory>
+#include <cstring>
 #include "Parameter.h"
 #include <iostream>
 
@@ -29,13 +30,13 @@ namespace GenParam
 			};
 		}
 
-		VectorParameter(const std::string& name, const std::string& label, const unsigned int dim, GetVecFunc<T> getValue,	SetVecFunc<T> setValue)
+		VectorParameter(const std::string& name, const std::string& label, const unsigned int dim, ParameterBase::GetVecFunc<T> getValue,	ParameterBase::SetVecFunc<T> setValue)
 			: ParameterBase(name, label, ParameterBase::INT32),
 			m_dim(dim),
 			m_getVecValue(getValue),
 			m_setVecValue(setValue)
 		{
-			setType(valuePtr[0]);
+			setType(getValue()[0]);
 		}
 
 		virtual ~VectorParameter() {}
@@ -57,16 +58,16 @@ namespace GenParam
 		template<typename TN>
 		void setType(TN v) {}
 
-		unsigned int getDim() const { return m_dim; }
+		void setType(char v) { m_type = DataTypes::VEC_INT8; }
+		void setType(short v) { m_type = DataTypes::VEC_INT16; }
+		void setType(int v) { m_type = DataTypes::VEC_INT32; }
+		void setType(unsigned char v) { m_type = DataTypes::VEC_UINT8; }
+		void setType(unsigned short v) { m_type = DataTypes::VEC_UINT16; }
+		void setType(unsigned int v) { m_type = DataTypes::VEC_UINT32; }
+		void setType(float v) { m_type = DataTypes::VEC_FLOAT; }
+		void setType(double v) { m_type = DataTypes::VEC_DOUBLE; }
 
-		template<>	void setType<char>(char v) { m_type = DataTypes::VEC_INT8; }
-		template<>	void setType<short>(short v) { m_type = DataTypes::VEC_INT16; }
-		template<>	void setType<int>(int v) { m_type = DataTypes::VEC_INT32; }
-		template<>	void setType<unsigned char>(unsigned char v) { m_type = DataTypes::VEC_UINT8; }
-		template<>	void setType<unsigned short>(unsigned short v) { m_type = DataTypes::VEC_UINT16; }
-		template<>	void setType<unsigned int>(unsigned int v) { m_type = DataTypes::VEC_UINT32; }
-		template<>	void setType<float>(float v) { m_type = DataTypes::VEC_FLOAT; }
-		template<>	void setType<double>(double v) { m_type = DataTypes::VEC_DOUBLE; }
+		unsigned int getDim() const { return m_dim; }
 	};
 
 	using FloatVectorParameter = VectorParameter<float>;
