@@ -9,6 +9,9 @@
 
 namespace GenParam
 {
+	/** An object that uses generic parameters should be inherited from this class.
+	* An example is given in the class TestParameterObject.
+	*/
 	class ParameterObject
 	{
 	protected:
@@ -18,6 +21,7 @@ namespace GenParam
 		ParameterObject() : m_parameters() {}
 		virtual ~ParameterObject() { m_parameters.clear(); }
 
+		/** This method should be overwritten to init the parameter definitions. */
 		virtual void initParameters() {}
 		unsigned int numParameters() const { return static_cast<unsigned int>(m_parameters.size()); }
 		ParameterBase* getParameter(const unsigned int index) { return m_parameters[index].get(); }
@@ -87,6 +91,7 @@ namespace GenParam
 			return static_cast<int>(m_parameters.size() - 1);
 		}
 
+		/** Get the parameter value by its id. */
 		template<typename T>
 		T getValue(const unsigned int parameterId) const
 		{
@@ -94,6 +99,7 @@ namespace GenParam
 			return param->getValue();
 		}
 
+		/** Set the parameter value by its id. */
 		template<typename T>
 		void setValue(const unsigned int parameterId, const T v) 
 		{
@@ -104,6 +110,7 @@ namespace GenParam
 				std::cerr << "Type mismatch in setValue!" << std::endl;
 		}
 
+		/** Get the parameter value by its id. */
 		template<typename T>
 		T* getVecValue(const unsigned int parameterId) const
 		{
@@ -111,6 +118,7 @@ namespace GenParam
 			return param->getValue();
 		}
 
+		/** Set the parameter value by its id. */
 		template<typename T>
 		void setVecValue(const unsigned int parameterId, T *v)
 		{

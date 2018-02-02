@@ -8,6 +8,7 @@
 
 namespace GenParam
 {
+	/** Class of an enum parameter. */
 	class EnumParameter : public Parameter<int>
 	{
 	public: 
@@ -35,6 +36,7 @@ namespace GenParam
 
 		virtual ~EnumParameter() {}
 
+		/** Add an enum value to this parameter type. */
 		void addEnumValue(const std::string &name, int &id)
 		{
 			EnumValue val;

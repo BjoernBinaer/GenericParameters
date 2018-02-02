@@ -10,6 +10,7 @@
 
 namespace GenParam
 {
+	/** Class of a numeric parameter. The user can define min/max values for this parameter type */
 	template<typename T>
 	class NumericParameter : public Parameter<T>
 	{

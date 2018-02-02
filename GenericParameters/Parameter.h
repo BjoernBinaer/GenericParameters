@@ -6,6 +6,8 @@
 
 namespace GenParam
 {
+	/** Base class of all generic parameter types. 
+	*/
 	class ParameterBase
 	{
 	public:
@@ -48,7 +50,7 @@ namespace GenParam
 		}
 
 		virtual ~ParameterBase() {}
-
+		
 		std::string getName() const { return m_name; }
 		void setName(const std::string& name) { m_name = name; }
 
@@ -72,6 +74,7 @@ namespace GenParam
 
 		GenParam::ParameterBase::DataTypes getType() const { return m_type; }
 
+		/** Check if the type of the value matches the type of the generic parameter */
 		template<typename T>
 		bool checkType(T v) { return false; }
 
@@ -106,6 +109,14 @@ namespace GenParam
 		bool m_visible; 
 	};
 
+	/** Class of a generic parameter.\n
+	* There are two ways to construct a generic parameter. Either the user provides a pointer 
+	* of a variable of the corresponding type or he provides a get and a set function. 
+	* Changing the generic parameter will then also change the corresponding variable or 
+	* class the corresponding set function.\n\n
+	* An example how to generate generic parameters and how to use them can be found in 
+	* the ParameterTest and the corresponding TestParameterObject.
+	*/
 	template<typename T>
 	class Parameter : public ParameterBase
 	{
@@ -114,6 +125,7 @@ namespace GenParam
 		SetFunc<T> m_setValue;
 
 	public:
+		/** Pointer-Constructor */
 		Parameter(const std::string& name, const std::string& label, ParameterBase::DataTypes type, T* valuePtr)
 			: ParameterBase(name, label, type)
 		{
@@ -121,6 +133,7 @@ namespace GenParam
 			m_setValue = [valuePtr](T value) { *valuePtr = value; };
 		}
 
+		/** Get/Set-Function constructor. Note that if the setValue function is the nullptr, then the parameter is marked as read-only. */
 		Parameter(const std::string& name, const std::string& label, ParameterBase::DataTypes type, GetFunc<T> getValue, SetFunc<T> setValue)
 			: ParameterBase(name, label, type),
 			m_getValue(getValue), m_setValue(setValue)

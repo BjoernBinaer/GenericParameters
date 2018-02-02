@@ -9,6 +9,8 @@
 
 namespace GenParam
 {
+	/** Class of a vector parameter. 
+	*/
 	template<typename T>
 	class VectorParameter : public ParameterBase
 	{
@@ -30,7 +32,7 @@ namespace GenParam
 			};
 		}
 
-		VectorParameter(const std::string& name, const std::string& label, const unsigned int dim, ParameterBase::GetVecFunc<T> getValue,	ParameterBase::SetVecFunc<T> setValue)
+		VectorParameter(const std::string& name, const std::string& label, const unsigned int dim, ParameterBase::GetVecFunc<T> getValue, ParameterBase::SetVecFunc<T> setValue)
 			: ParameterBase(name, label, ParameterBase::INT32),
 			m_dim(dim),
 			m_getVecValue(getValue),
