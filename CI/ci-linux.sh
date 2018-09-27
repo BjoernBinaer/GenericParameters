@@ -84,11 +84,10 @@ make $MAKE_OPTIONS
 echo -e "${OUTPUT}"
 echo ""
 echo "======================================================================"
-echo "Running unittests Release version"
+echo "Running unit tests Release version"
 echo "======================================================================"
 echo -e "${NC}"
 
-ls ..
 cd ../bin
 
 #execute tests
@@ -114,5 +113,17 @@ cmake -DCMAKE_BUILD_TYPE=Debug $OPTIONS ../
 
 #build it
 make $MAKE_OPTIONS
+
+echo -e "${OUTPUT}"
+echo ""
+echo "======================================================================"
+echo "Running unit tests Debug version"
+echo "======================================================================"
+echo -e "${NC}"
+
+cd ../bin
+
+#execute tests
+./ParameterTest
 
 cd ..
