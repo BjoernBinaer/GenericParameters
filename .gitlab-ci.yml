@@ -1,0 +1,5 @@
+gcc-c++11:
+  stage: build
+  script: "CI/ci-linux.sh gcc C++11"
+  tags:
+    - Linux
