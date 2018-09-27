@@ -1,5 +1,7 @@
 gcc-c++11:
   stage: build
-  script: "CI/ci-linux.sh gcc C++11"
+  script: 
+    -"chmod +x ./CI/ci-linux.sh"
+    -"CI/ci-linux.sh gcc C++11"
   tags:
     - Linux
