@@ -99,12 +99,15 @@ ECHO "============================================================="
 
 
 
-"C:\Program Files\CMake\bin\cmake.exe" -G "%GENERATOR%" -DCMAKE_BUILD_TYPE=Release %CMAKE_CONFIGURATION% ..
+"C:\Program Files\CMake\bin\cmake.exe" -G "%GENERATOR%" %CMAKE_CONFIGURATION% ..
 
 %VS_PATH% /Build "Release" GenericParameters.sln /Project "ALL_BUILD"
+%VS_PATH% /Build "Debug" GenericParameters.sln /Project "ALL_BUILD"
 
 IF %errorlevel% NEQ 0 exit /b %errorlevel%
 
+cd 
+ls
 cd ../bin
 
 #execute tests
