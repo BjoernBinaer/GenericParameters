@@ -124,6 +124,6 @@ echo -e "${NC}"
 cd ../bin
 
 #execute tests
-./ParameterTest
+./ParameterTest_d
 
 cd ..

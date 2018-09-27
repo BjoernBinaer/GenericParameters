@@ -131,7 +131,7 @@ copy Build\lib\*d.lib ..\build-release\Build\lib
 cd ../bin
 
 #execute tests
-./ParameterTest
+./ParameterTest_d
 
 cd ..
 
