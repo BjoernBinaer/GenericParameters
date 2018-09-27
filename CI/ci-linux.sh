@@ -88,8 +88,8 @@ echo "Running unittests Release version"
 echo "======================================================================"
 echo -e "${NC}"
 
-ls
-cd bin
+ls ..
+cd ../bin
 
 #execute tests
 ./ParameterTest
