@@ -1,3 +1,16 @@
+VS2017-64-bit:
+  stage: build
+  variables:
+    BUILD_PLATFORM: "VS2017"
+    ARCHITECTURE:   "x64"
+    SHARED:         "FALSE"
+  script: "CI\\ci-windows.bat"
+  tags:
+    - VS2017
+  artifacts:
+    paths:
+      - build-release/*.exe
+
 gcc-c++11:
   stage: build
   script: 
