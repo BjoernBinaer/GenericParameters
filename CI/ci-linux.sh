@@ -81,6 +81,18 @@ cmake -DCMAKE_BUILD_TYPE=Release $OPTIONS ../
 #build it
 make $MAKE_OPTIONS
 
+echo -e "${OUTPUT}"
+echo ""
+echo "======================================================================"
+echo "Running unittests Release version"
+echo "======================================================================"
+echo -e "${NC}"
+
+cd bin
+
+#execute tests
+./ParameterTest
+
 cd ..
 
 echo -e "${OUTPUT}"
