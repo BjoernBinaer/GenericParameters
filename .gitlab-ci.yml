@@ -9,7 +9,7 @@ VS2017-64-bit:
     - VS2017
   artifacts:
     paths:
-      - build-release/*.exe
+      - bin/*.exe
 
 gcc-c++11:
   stage: build
