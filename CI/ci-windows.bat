@@ -1,6 +1,6 @@
-mkdir build-release
+mkdir build
 
-cd build-release
+cd build
 
 IF "%ARCHITECTURE%" == "x64" (
   set ARCH_VS= Win64
@@ -105,38 +105,24 @@ ECHO "============================================================="
 
 IF %errorlevel% NEQ 0 exit /b %errorlevel%
 
-cd 
-dir
 cd ..\\bin
-dir
 
 REM execute tests
 ParameterTest.exe
 
 cd ..
 
-cd ..
-
-mkdir build-debug
-
-cd build-debug
-
-REM "C:\Program Files\CMake\bin\cmake.exe" -G "%GENERATOR%" -DCMAKE_BUILD_TYPE=Debug %CMAKE_CONFIGURATION% ..
+cd build
 
 %VS_PATH% /Build "Debug" GenericParameters.sln /Project "ALL_BUILD"
 
 IF %errorlevel% NEQ 0 exit /b %errorlevel%
 
 
-copy Build\lib\*d.lib ..\build-release\Build\lib
+cd ..\\bin
 
-
-cd ../bin
-
-#execute tests
-./ParameterTest
-
-cd ..
+REM execute tests
+ParameterTest.exe
 
 cd ..
 
