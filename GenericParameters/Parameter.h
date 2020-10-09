@@ -31,7 +31,9 @@ namespace GenParam
 			VEC_UINT16,
 			VEC_UINT32,
 			ENUM, 
-			STRING
+			STRING,
+			LIST,
+			STRUCT
 		};
 
 		using Ptr = std::unique_ptr<ParameterBase>;
@@ -76,7 +78,10 @@ namespace GenParam
 
 		/** Check if the type of the value matches the type of the generic parameter */
 		template<typename T>
-		bool checkType(T v) { return false; }
+		bool checkType(T v) { return m_type == STRUCT; }
+
+        template<typename T>
+        bool checkType(std::vector<T> v) { return m_type == LIST; }
 
 		bool checkType(char v) { return m_type == INT8; }
 		bool checkType(short v) { return m_type == INT16; }
