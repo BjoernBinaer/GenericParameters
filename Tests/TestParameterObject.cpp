@@ -12,6 +12,7 @@ int GenParam::TestParameterObject::MY_ENUM_PARAMETER = -1;
 int GenParam::TestParameterObject::MY_ENUM_PARAMETER2 = -1;
 int GenParam::TestParameterObject::MY_STRING_PARAMETER = -1;
 int GenParam::TestParameterObject::MY_VEC3_PARAMETER = -1;
+int GenParam::TestParameterObject::MY_STRUCT_PARAMETER = -1;
 
 int GenParam::TestParameterObject::MY_ENUM_VALUE1 = -1;
 int GenParam::TestParameterObject::MY_ENUM_VALUE2 = -1;
@@ -76,6 +77,12 @@ void TestParameterObject::initParameters()
 	setGroup(MY_VEC3_PARAMETER, "ParameterGroup");
 	setDescription(MY_VEC3_PARAMETER, "Help text");
 
+	m_struct.a = 1;
+	m_struct.b = 2.3;
+	m_struct.c = "Hello GenericParams";
+	MY_STRUCT_PARAMETER = createStructParameter("structParam", "Struct Paramter", {"int", "double", "string"}, &m_struct.a, &m_struct.b, &m_struct.c);
+	setGroup(MY_STRUCT_PARAMETER, "ParamterGroup");
+    setDescription(MY_STRUCT_PARAMETER, "Help text");
 }
 
 

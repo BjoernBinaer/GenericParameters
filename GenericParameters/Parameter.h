@@ -33,7 +33,8 @@ namespace GenParam
 			ENUM, 
 			STRING,
 			LIST,
-			STRUCT
+			STRUCT,
+			NPARAMS
 		};
 
 		using Ptr = std::unique_ptr<ParameterBase>;

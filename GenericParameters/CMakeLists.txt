@@ -6,6 +6,7 @@ target_sources(GenericParameters INTERFACE
 	${CMAKE_CURRENT_LIST_DIR}/NumericParameter.h
 	${CMAKE_CURRENT_LIST_DIR}/ParameterObject.h
 	${CMAKE_CURRENT_LIST_DIR}/VectorParameter.h
+	${CMAKE_CURRENT_LIST_DIR}/StructParameter.h
 	)
 
 

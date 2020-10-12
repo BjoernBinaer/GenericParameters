@@ -20,7 +20,7 @@ int main( int argc, char **argv )
 void paramTest()
 {
 	TestParameterObject tc;
-	assert(tc.numParameters() == 7);
+	assert(tc.numParameters() == 8);
 
 	auto boolParam = static_cast<BoolParameter*>(tc.getParameter(TestParameterObject::MY_BOOL_PARAMETER));
 	assert(boolParam->getValue() == true);

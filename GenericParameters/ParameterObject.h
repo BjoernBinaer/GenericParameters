@@ -6,6 +6,7 @@
 #include "NumericParameter.h"
 #include "EnumParameter.h"
 #include "VectorParameter.h"
+#include "StructParameter.h"
 
 namespace GenParam
 {
@@ -77,17 +78,10 @@ namespace GenParam
 			return static_cast<int>(m_parameters.size() - 1);
 		}
 
-        template<typename T>
-        int createStructParameter(const std::string &name, const std::string &label, T* valuePtr)
+        template<typename... Ts>
+        int createStructParameter(const std::string &name, const std::string &label, std::array<std::string, sizeof...(Ts)> names, Ts*... valuePtr)
         {
-            m_parameters.push_back(std::unique_ptr<Parameter<T>>(new Parameter<std::string>(name, label, ParameterBase::STRUCT, valuePtr)));
-            return static_cast<int>(m_parameters.size() - 1);
-        }
-
-        template<typename T>
-        int createStructParameter(const std::string &name, const std::string &label, ParameterBase::GetFunc<T> getValue, ParameterBase::SetFunc<T> setValue = {})
-        {
-            m_parameters.push_back(std::unique_ptr<Parameter<T>>(new Parameter<T>(name, label, ParameterBase::STRUCT, getValue, setValue)));
+            m_parameters.push_back(std::unique_ptr<StructParameter<Ts...>>(new StructParameter<Ts...>(name, label, names, valuePtr...)));
             return static_cast<int>(m_parameters.size() - 1);
         }
 

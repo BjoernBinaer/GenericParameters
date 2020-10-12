@@ -7,6 +7,13 @@ namespace GenParam
 {
 	class TestParameterObject : public ParameterObject
 	{
+	public:
+        struct Struct{
+            int a;
+            double b;
+            std::string c;
+        };
+
 	protected:
 		bool m_boolValue;
 		int m_intValue;		
@@ -15,6 +22,7 @@ namespace GenParam
 		int m_enumValue2;
 		std::string m_strValue;
 		double m_vec3Value[3];
+		Struct m_struct;
 
 	public:
 		static int MY_BOOL_PARAMETER;
@@ -24,12 +32,13 @@ namespace GenParam
 		static int MY_ENUM_PARAMETER2;
 		static int MY_STRING_PARAMETER;
 		static int MY_VEC3_PARAMETER;
+        static int MY_STRUCT_PARAMETER;
 
 		static int MY_ENUM_VALUE1;
 		static int MY_ENUM_VALUE2;
 		static int MY_ENUM2_VALUE1;
 		static int MY_ENUM2_VALUE2;
-		
+
 		TestParameterObject() { initParameters();  };
 		~TestParameterObject() {};
 
