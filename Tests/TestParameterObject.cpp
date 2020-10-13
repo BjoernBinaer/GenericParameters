@@ -80,9 +80,15 @@ void TestParameterObject::initParameters()
 	m_struct.a = 1;
 	m_struct.b = 2.3;
 	m_struct.c = "Hello GenericParams";
-	MY_STRUCT_PARAMETER = createStructParameter("structParam", "Struct Paramter", {"int", "double", "string"}, &m_struct.a, &m_struct.b, &m_struct.c);
+	MY_STRUCT_PARAMETER = createStructParameter("structParam", "Struct Paramter");
 	setGroup(MY_STRUCT_PARAMETER, "ParamterGroup");
     setDescription(MY_STRUCT_PARAMETER, "Help text");
+
+    int struct_indices[3];
+    auto struct_param = dynamic_cast<StructParameter*>(getParameter(MY_STRUCT_PARAMETER));
+    struct_indices[0] = struct_param->createNumericParameter("A", "A", &m_struct.a);
+    struct_indices[1] = struct_param->createNumericParameter("B", "B", &m_struct.b);
+    struct_indices[2] = struct_param->createNumericParameter("C", "C", &m_struct.c);
 }
 
 

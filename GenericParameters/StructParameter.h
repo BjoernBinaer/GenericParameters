@@ -11,64 +11,152 @@ namespace GenParam
 {
     /** Class of a vector parameter.
     */
-    template<typename... Ts>
     class StructParameter : public ParameterBase
     {
     protected:
-        std::tuple<Ts*...> m_values;
-        std::array<std::string, sizeof...(Ts)> m_names;
-        std::array<DataTypes, sizeof...(Ts)> m_types;
-        int m_dim;
+        std::vector<ParameterBase::Ptr> m_parameters;
 
     public:
-        StructParameter(const std::string& name, const std::string& label, std::array<std::string, sizeof...(Ts)> names, Ts * ... valuePtrs)
-                : ParameterBase(name, label, ParameterBase::STRUCT)
+        StructParameter(const std::string& name, const std::string& label)
+                : ParameterBase(name, label, ParameterBase::STRUCT), m_parameters() {}
+        virtual ~StructParameter() { m_parameters.clear(); }
+
+        /** This method should be overwritten to init the parameter definitions. */
+        unsigned int numParameters() const { return static_cast<unsigned int>(m_parameters.size()); }
+        ParameterBase* getParameter(const unsigned int index) { return m_parameters[index].get(); }
+        ParameterBase* const getParameter(const unsigned int index) const { return m_parameters[index].get(); }
+
+        template<typename T>
+        int createNumericParameter(const std::string &name, const std::string &label, T* valuePtr)
         {
-            m_values = std::make_tuple(valuePtrs...);
-            m_names = names;
-            m_types = {getType(*valuePtrs)...};
-            m_dim = static_cast<int>(sizeof...(Ts));
+            m_parameters.push_back(std::unique_ptr<NumericParameter<T>>(new NumericParameter<T>(name, label, valuePtr)));
+            return static_cast<int>(m_parameters.size() - 1);
         }
 
-        virtual ~StructParameter() {}
-
-        template<int index, typename T>
-        void setValue(T v)
+        template<typename T>
+        int createNumericParameter(const std::string &name, const std::string &label, ParameterBase::GetFunc<T> getValue, ParameterBase::SetFunc<T> setValue = {})
         {
-            if (index >= m_dim){
-                std::cout << "Invalid index";
-                return;
-            }
-            if (getType(v) != m_types[index]){
-                std::cout << "Invalid datatype";
-                return;
-            }
-            *std::get<index>(m_values) = v;
+            m_parameters.push_back(std::unique_ptr<NumericParameter<T>>(new NumericParameter<T>(name, label, getValue, setValue)));
+            return static_cast<int>(m_parameters.size() - 1);
         }
 
-        template<int index>
-        std::tuple_element<index, std::tuple<Ts*...>> getValue() const { return *std::get<index>(m_values); }
+        int createBoolParameter(const std::string &name, const std::string &label, bool* valuePtr)
+        {
+            m_parameters.push_back(std::unique_ptr<Parameter<bool>>(new Parameter<bool>(name, label, ParameterBase::BOOL, valuePtr)));
+            return static_cast<int>(m_parameters.size() - 1);
+        }
 
-        // virtual void setReadOnly(const bool val)
-        // {
-        //     m_readOnly = val;
-        //     if (m_setVecValue == nullptr)
-        //         m_readOnly = true;
-        // }
+        int createBoolParameter(const std::string &name, const std::string &label, Parameter<bool>::GetFunc<bool> getValue, Parameter<bool>::SetFunc<bool> setValue = {})
+        {
+            m_parameters.push_back(std::unique_ptr<Parameter<bool>>(new Parameter<bool>(name, label, ParameterBase::BOOL, getValue, setValue)));
+            return static_cast<int>(m_parameters.size() - 1);
+        }
 
-        template<typename TN>
-        DataTypes getType(TN v) { return DataTypes::NPARAMS; }
+        int createEnumParameter(const std::string &name, const std::string &label, int* valuePtr)
+        {
+            m_parameters.push_back(std::unique_ptr<EnumParameter>(new EnumParameter(name, label, valuePtr)));
+            return static_cast<int>(m_parameters.size() - 1);
+        }
 
-        DataTypes getType(char v) { return DataTypes::INT8; }
-        DataTypes getType(short v) { return DataTypes::INT16; }
-        DataTypes getType(int v) { return DataTypes::INT32; }
-        DataTypes getType(unsigned char v) { return DataTypes::UINT8; }
-        DataTypes getType(unsigned short v) { return DataTypes::UINT16; }
-        DataTypes getType(unsigned int v) { return DataTypes::UINT32; }
-        DataTypes getType(float v) { return DataTypes::FLOAT; }
-        DataTypes getType(double v) { return DataTypes::DOUBLE; }
+        int createEnumParameter(const std::string &name, const std::string &label, ParameterBase::GetFunc<int> getValue, ParameterBase::SetFunc<int> setValue = {})
+        {
+            m_parameters.push_back(std::unique_ptr<EnumParameter>(new EnumParameter(name, label, getValue, setValue)));
+            return static_cast<int>(m_parameters.size() - 1);
+        }
 
-        unsigned int getDim() const { return m_dim; }
+        int createStringParameter(const std::string &name, const std::string &label, std::string* valuePtr)
+        {
+            m_parameters.push_back(std::unique_ptr<Parameter<std::string>>(new Parameter<std::string>(name, label, ParameterBase::STRING, valuePtr)));
+            return static_cast<int>(m_parameters.size() - 1);
+        }
+
+        int createStringParameter(const std::string &name, const std::string &label, Parameter<std::string>::GetFunc<std::string> getValue, Parameter<std::string>::SetFunc<std::string> setValue = {})
+        {
+            m_parameters.push_back(std::unique_ptr<Parameter<std::string>>(new Parameter<std::string>(name, label, ParameterBase::STRING, getValue, setValue)));
+            return static_cast<int>(m_parameters.size() - 1);
+        }
+
+        int createStructParameter(const std::string &name, const std::string &label)
+        {
+            m_parameters.push_back(std::unique_ptr<StructParameter>(new StructParameter(name, label)));
+            return static_cast<int>(m_parameters.size() - 1);
+        }
+
+        template<typename T>
+        int createVectorParameter(const std::string &name, const std::string &label, const unsigned int dim, T* valuePtr)
+        {
+            m_parameters.push_back(std::unique_ptr<VectorParameter<T>>(new VectorParameter<T>(name, label, dim, valuePtr)));
+            return static_cast<int>(m_parameters.size() - 1);
+        }
+
+        template<typename T>
+        int createVectorParameter(const std::string &name, const std::string &label, const unsigned int dim, ParameterBase::GetVecFunc<T> getVecValue, ParameterBase::SetVecFunc<T> setVecValue = {})
+        {
+            m_parameters.push_back(std::unique_ptr<VectorParameter<T>>(new VectorParameter<T>(name, label, dim, getVecValue, setVecValue)));
+            return static_cast<int>(m_parameters.size() - 1);
+        }
+
+        /** Get the parameter value by its id. */
+        template<typename T>
+        T getValue(const unsigned int parameterId) const
+        {
+            Parameter<T>* param = static_cast<Parameter<T>*>(getParameter(parameterId));
+            return param->getValue();
+        }
+
+        /** Set the parameter value by its id. */
+        template<typename T>
+        void setValue(const unsigned int parameterId, const T v)
+        {
+            ParameterBase *paramBase = getParameter(parameterId);
+            if (paramBase->checkType(v))
+                static_cast<Parameter<T>*>(paramBase)->setValue(v);
+            else
+                std::cerr << "Type mismatch in setValue!" << std::endl;
+        }
+
+        /** Get the parameter value by its id. */
+        template<typename T>
+        T* getVecValue(const unsigned int parameterId) const
+        {
+            VectorParameter<T>* param = static_cast<VectorParameter<T>*>(getParameter(parameterId));
+            return param->getValue();
+        }
+
+        /** Set the parameter value by its id. */
+        template<typename T>
+        void setVecValue(const unsigned int parameterId, T *v)
+        {
+            ParameterBase *paramBase = getParameter(parameterId);
+            if (paramBase->checkType(v))
+                static_cast<VectorParameter<T>*>(paramBase)->setValue(v);
+            else
+                std::cerr << "Type mismatch in setValue!" << std::endl;
+        }
+
+        void setVisible(const unsigned int parameterId, const bool v) { m_parameters[parameterId]->setVisible(v); }
+        bool getVisible(const unsigned int parameterId) { return m_parameters[parameterId]->getVisible(); }
+
+        void setReadOnly(const unsigned int parameterId, const bool v) { m_parameters[parameterId]->setReadOnly(v); }
+        bool getReadOnly(const unsigned int parameterId) { return m_parameters[parameterId]->getReadOnly(); }
+
+        void setName(const unsigned int parameterId, const std::string &v) { m_parameters[parameterId]->setName(v); }
+        std::string getName(const unsigned int parameterId) { return m_parameters[parameterId]->getName(); }
+
+        void setLabel(const unsigned int parameterId, const std::string &v) { m_parameters[parameterId]->setLabel(v); }
+        std::string getLabel(const unsigned int parameterId) { return m_parameters[parameterId]->getLabel(); }
+
+        void setGroup(const unsigned int parameterId, const std::string &v) { m_parameters[parameterId]->setGroup(v); }
+        std::string getGroup(const unsigned int parameterId) { return m_parameters[parameterId]->getGroup(); }
+
+        void setDescription(const unsigned int parameterId, const std::string &v) { m_parameters[parameterId]->setDescription(v); }
+        std::string getDescription(const unsigned int parameterId) { return m_parameters[parameterId]->getDescription(); }
+
+        void setHotKey(const unsigned int parameterId, const std::string &v) { m_parameters[parameterId]->setHotKey(v); }
+        std::string getHotKey(const unsigned int parameterId) { return m_parameters[parameterId]->getHotKey(); }
+
+        GenParam::ParameterBase::DataTypes getType(const unsigned int parameterId) const { return m_parameters[parameterId]->getType(); }
+
     };
 
 }
