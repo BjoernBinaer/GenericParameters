@@ -76,12 +76,6 @@ namespace GenParam
             return static_cast<int>(m_parameters.size() - 1);
         }
 
-        int createStructParameter(const std::string &name, const std::string &label)
-        {
-            m_parameters.push_back(std::unique_ptr<StructParameter>(new StructParameter(name, label)));
-            return static_cast<int>(m_parameters.size() - 1);
-        }
-
         template<typename T>
         int createVectorParameter(const std::string &name, const std::string &label, const unsigned int dim, T* valuePtr)
         {

@@ -51,6 +51,16 @@ namespace GenParam {
             return m_length;
         }
 
+        unsigned int getIndex() const {
+            return m_idx;
+        }
+
+        void setIndex(unsigned int i) {
+            if (i < m_length){
+                m_idx = i;
+            }
+        }
+
         template<typename T>
         int createNumericParameter(const std::string &name, const std::string &label, T *valuePtr) {
             ParameterBase::GetFunc<T> getFuncIndex = [&, valuePtr](){ return *(T*)((char*)valuePtr + m_offset * m_idx);};
@@ -77,7 +87,7 @@ namespace GenParam {
 
         int createStringParameter(const std::string &name, const std::string &label, std::string *valuePtr) {
             Parameter<std::string>::GetFunc<std::string> getFuncIndex = [&, valuePtr](){ return *(std::string*)((char*)valuePtr + m_offset * m_idx);};
-            Parameter<std::string>::SetFunc<std::string> setFuncIndex = [&, valuePtr](std::string value){ *(std::string*)((char*)valuePtr + m_offset * m_idx) = value;};
+            Parameter<std::string>::SetFunc<std::string> setFuncIndex = [&, valuePtr](std::string value){ *(std::string*)((char*)valuePtr + m_offset * m_idx) = std::move(value);};
             m_parameters.push_back(std::unique_ptr<Parameter<std::string>>(
                     new Parameter<std::string>(name, label, ParameterBase::STRING, std::move(getFuncIndex), std::move(setFuncIndex))));
             return static_cast<int>(m_parameters.size() - 1);
@@ -86,7 +96,7 @@ namespace GenParam {
         template<typename T>
         int
         createVectorParameter(const std::string &name, const std::string &label, const unsigned int dim, T *valuePtr) {
-            ParameterBase::GetVecFunc<T> getFuncIndex = [&, valuePtr](){ return (T*)((char*)valuePtr + m_offset * m_idx);};
+            ParameterBase::GetVecFunc<T> getFuncIndex = [&, valuePtr]()->T*{ return (T*)((char*)valuePtr + m_offset * m_idx);};
             ParameterBase::SetVecFunc<T> setFuncIndex = [&, valuePtr, dim](T* value){
                 auto curPtr = (T*)((char*)valuePtr + m_offset * m_idx);
                 memcpy(curPtr, value, dim*sizeof(T));
@@ -128,7 +138,7 @@ namespace GenParam {
         T *getVecValue(const unsigned int i, const unsigned int parameterId) {
             if (i >= m_length){
                 std::cout << "Access at invalid index";
-                return T();
+                return nullptr;
             }
             m_idx = i;
             VectorParameter<T> *param = static_cast<VectorParameter<T> *>(getParameter(parameterId));

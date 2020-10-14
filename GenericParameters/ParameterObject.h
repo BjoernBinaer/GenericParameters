@@ -7,6 +7,7 @@
 #include "EnumParameter.h"
 #include "VectorParameter.h"
 #include "StructParameter.h"
+#include "ListParameter.h"
 
 namespace GenParam
 {
@@ -81,6 +82,13 @@ namespace GenParam
         int createStructParameter(const std::string &name, const std::string &label)
         {
             m_parameters.push_back(std::unique_ptr<StructParameter>(new StructParameter(name, label)));
+            return static_cast<int>(m_parameters.size() - 1);
+        }
+
+        template<typename T>
+        int createListParameter(const std::string &name, const std::string &label, std::vector<T> *data)
+        {
+            m_parameters.push_back(std::unique_ptr<ListParameter>(new ListParameter(name, label, data)));
             return static_cast<int>(m_parameters.size() - 1);
         }
 

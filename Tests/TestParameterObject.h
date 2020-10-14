@@ -12,6 +12,7 @@ namespace GenParam
             int a;
             double b;
             std::string c;
+            double d[3];
         };
 
 	protected:
@@ -22,7 +23,7 @@ namespace GenParam
 		int m_enumValue2;
 		std::string m_strValue;
 		double m_vec3Value[3];
-		Struct m_struct;
+		std::vector<Struct> m_struct;
 
 	public:
 		static int MY_BOOL_PARAMETER;
@@ -33,6 +34,9 @@ namespace GenParam
 		static int MY_STRING_PARAMETER;
 		static int MY_VEC3_PARAMETER;
         static int MY_STRUCT_PARAMETER;
+        static int MY_STRUCT_PARAMETERS[4];
+        static int MY_LIST_PARAMETER;
+        static int MY_LIST_PARAMETERS[4];
 
 		static int MY_ENUM_VALUE1;
 		static int MY_ENUM_VALUE2;

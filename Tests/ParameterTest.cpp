@@ -20,7 +20,7 @@ int main( int argc, char **argv )
 void paramTest()
 {
 	TestParameterObject tc;
-	assert(tc.numParameters() == 8);
+	assert(tc.numParameters() == 9);
 
 	auto boolParam = static_cast<BoolParameter*>(tc.getParameter(TestParameterObject::MY_BOOL_PARAMETER));
 	assert(boolParam->getValue() == true);
@@ -73,6 +73,8 @@ void paramTest()
 
 	auto strParam = static_cast<StringParameter*>(tc.getParameter(TestParameterObject::MY_STRING_PARAMETER));
 	assert(tc.getValue<std::string>(TestParameterObject::MY_STRING_PARAMETER) == "test string");
+    tc.setValue<std::string>(TestParameterObject::MY_STRING_PARAMETER, "other test string");
+    assert(tc.getValue<std::string>(TestParameterObject::MY_STRING_PARAMETER) == "other test string");
 	assert(tc.getType(TestParameterObject::MY_STRING_PARAMETER) == ParameterBase::STRING);
 
 	auto vec3Param = static_cast<DoubleVectorParameter*>(tc.getParameter(TestParameterObject::MY_VEC3_PARAMETER));
@@ -89,6 +91,69 @@ void paramTest()
 	assert(vecValue[1] == 3);
 	assert(vecValue[2] == 4.5);
  	assert(tc.getType(TestParameterObject::MY_VEC3_PARAMETER) == ParameterBase::VEC_DOUBLE);
+
+
+ 	auto structParam = dynamic_cast<StructParameter*>(tc.getParameter(TestParameterObject::MY_STRUCT_PARAMETER));
+    {
+        auto param = dynamic_cast<Parameter<int>*>(structParam->getParameter(TestParameterObject::MY_STRUCT_PARAMETERS[0]));
+        assert(param->getValue() == 1);
+        param->setValue(20);
+        assert(param->getValue() == 20);
+        param->setValue(1);
+        assert(param->getValue() == 1);
+    }
+    {
+        auto param = dynamic_cast<DoubleParameter*>(structParam->getParameter(TestParameterObject::MY_STRUCT_PARAMETERS[1]));
+        assert(param->getValue() == 2.3);
+        param->setValue(35.2);
+        assert(param->getValue() == 35.2);
+        param->setValue(2.3);
+        assert(param->getValue() == 2.3);
+    }
+    {
+        auto param = dynamic_cast<StringParameter*>(structParam->getParameter(TestParameterObject::MY_STRUCT_PARAMETERS[2]));
+        assert(param->getValue() == "Hello GenericParams");
+        param->setValue("Hello someone else");
+        assert(param->getValue() == "Hello someone else");
+        param->setValue("Hello GenericParams");
+        assert(param->getValue() == "Hello GenericParams");
+    }
+    {
+        auto param = dynamic_cast<DoubleVectorParameter*>(structParam->getParameter(TestParameterObject::MY_STRUCT_PARAMETERS[3]));
+        assert(param->getValue()[0] == 3.2);
+        assert(param->getValue()[1] == 4.5);
+        assert(param->getValue()[2] == 3.3);
+    }
+
+
+    auto listParam = dynamic_cast<ListParameter*>(tc.getParameter(TestParameterObject::MY_LIST_PARAMETER));
+    {
+        auto param = dynamic_cast<Parameter<int>*>(listParam->getParameter(TestParameterObject::MY_LIST_PARAMETERS[0]));
+        listParam->setIndex(0); assert(param->getValue() == 1);
+        listParam->setIndex(1); assert(param->getValue() == 2);
+    }
+    {
+        auto param = dynamic_cast<DoubleParameter*>(listParam->getParameter(TestParameterObject::MY_LIST_PARAMETERS[1]));
+        listParam->setIndex(0); assert(param->getValue() == 2.3);
+        listParam->setIndex(1); assert(param->getValue() == 4.2);
+    }
+    {
+        auto param = dynamic_cast<StringParameter*>(listParam->getParameter(TestParameterObject::MY_LIST_PARAMETERS[2]));
+        listParam->setIndex(0); assert(param->getValue() == "Hello GenericParams");
+        listParam->setIndex(1); assert(param->getValue() == "GenericParams");
+    }
+    {
+        auto param = dynamic_cast<VectorParameter<double>*>(listParam->getParameter(TestParameterObject::MY_LIST_PARAMETERS[3]));
+        listParam->setIndex(0);
+        assert(param->getValue()[0] == 3.2);
+        assert(param->getValue()[1] == 4.5);
+        assert(param->getValue()[2] == 3.3);
+        listParam->setIndex(1);
+        assert(param->getValue()[0] == 1.2);
+        assert(param->getValue()[1] == 4.2);
+        assert(param->getValue()[2] == 6.3);
+    }
+
 
 	std::cout << "Success\n";
 }
