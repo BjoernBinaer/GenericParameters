@@ -2,90 +2,190 @@
 #define GENERICPARAMETERS_LISTPARAMETER_H
 
 #include <functional>
+#include <utility>
+#include <vector>
 #include <memory>
 #include <cstring>
 #include "Parameter.h"
+#include "NumericParameter.h"
+#include "EnumParameter.h"
+#include "VectorParameter.h"
+#include "StructParameter.h"
 #include <iostream>
 
-namespace GenParam
-{
+namespace GenParam {
     /** Class of a vector parameter.
     */
-    template<typename T>
-    class ListParameter : public ParameterBase
-    {
-        using GetListFunc = std::function<T (unsigned int)>;
-        using SetListFunc = std::function<void (unsigned int, T)>;
+    class ListParameter : public ParameterBase {
+        using GetListFunc = std::function<void*(unsigned int)>;  // Get a single parameter from the list
+        using SetListFunc = std::function<void(unsigned int, void*)>;  // Set a single parameter from the list
+        using ResizeFunc = std::function<void(
+                unsigned int)>;  // Resize the list, only needed when the generic parameters are initializing objects
 
     protected:
-        GetListFunc m_getListValue;
-        SetListFunc m_setListValue;
-        int m_dim;
+        std::vector<ParameterBase::Ptr> m_parameters;
+        ResizeFunc m_resize;
         ssize_t m_offset;
+        unsigned int m_length;
+        unsigned int m_idx;
 
     public:
-        ListParameter(const std::string& name, const std::string& label, T* valuePtr, ssize_t offset)
-                : ParameterBase(name, label, ParameterBase::INT32),
-                  m_offset(offset)
-        {
-            setType(valuePtr[0]);
-            m_getListValue = [valuePtr]() { return valuePtr; };
-            m_setListValue = [valuePtr, dim](T* value)
-            {
-                memcpy(valuePtr, value, dim*sizeof(T));
+        template<typename T>
+        ListParameter(const std::string &name, const std::string &label, std::vector<T> *data)
+                : ParameterBase(name, label, ParameterBase::STRUCT), m_parameters(), m_length(data->size()), m_offset(sizeof(T)), m_resize([data](const unsigned int i){ data->resize(i); }){}
+
+        virtual ~ListParameter() { m_parameters.clear(); }
+
+        unsigned int numParameters() const { return static_cast<unsigned int>(m_parameters.size()); }
+
+        ParameterBase *getParameter(const unsigned int index) { return m_parameters[index].get(); }
+
+        ParameterBase *const getParameter(const unsigned int index) const { return m_parameters[index].get(); }
+
+        void resize(unsigned int i){
+            m_length = i;
+            m_resize(i);
+        }
+
+        unsigned int size() const {
+            return m_length;
+        }
+
+        template<typename T>
+        int createNumericParameter(const std::string &name, const std::string &label, T *valuePtr) {
+            ParameterBase::GetFunc<T> getFuncIndex = [&, valuePtr](){ return *(T*)((char*)valuePtr + m_offset * m_idx);};
+            ParameterBase::SetFunc<T> setFuncIndex = [&, valuePtr](T value){ *(T*)((char*)valuePtr + m_offset * m_idx) = value;};
+            m_parameters.push_back(
+                    std::unique_ptr<NumericParameter<T>>(new NumericParameter<T>(name, label, std::move(getFuncIndex), std::move(setFuncIndex))));
+            return static_cast<int>(m_parameters.size() - 1);
+        }
+
+        int createBoolParameter(const std::string &name, const std::string &label, bool *valuePtr) {
+            Parameter<bool>::GetFunc<bool> getFuncIndex = [&, valuePtr](){ return *(bool*)((char*)valuePtr + m_offset * m_idx);};
+            Parameter<bool>::SetFunc<bool> setFuncIndex = [&, valuePtr](bool value){ *(bool*)((char*)valuePtr + m_offset * m_idx) = value;};
+            m_parameters.push_back(
+                    std::unique_ptr<Parameter<bool>>(new Parameter<bool>(name, label, ParameterBase::BOOL, std::move(getFuncIndex), std::move(setFuncIndex))));
+            return static_cast<int>(m_parameters.size() - 1);
+        }
+
+        int createEnumParameter(const std::string &name, const std::string &label, int *valuePtr) {
+            ParameterBase::GetFunc<int> getFuncIndex = [&, valuePtr](){ return *(int*)((char*)valuePtr + m_offset * m_idx);};
+            ParameterBase::SetFunc<int> setFuncIndex = [&, valuePtr](int value){ *(int*)((char*)valuePtr + m_offset * m_idx) = value;};
+            m_parameters.push_back(std::unique_ptr<EnumParameter>(new EnumParameter(name, label, std::move(getFuncIndex), std::move(setFuncIndex))));
+            return static_cast<int>(m_parameters.size() - 1);
+        }
+
+        int createStringParameter(const std::string &name, const std::string &label, std::string *valuePtr) {
+            Parameter<std::string>::GetFunc<std::string> getFuncIndex = [&, valuePtr](){ return *(std::string*)((char*)valuePtr + m_offset * m_idx);};
+            Parameter<std::string>::SetFunc<std::string> setFuncIndex = [&, valuePtr](std::string value){ *(std::string*)((char*)valuePtr + m_offset * m_idx) = value;};
+            m_parameters.push_back(std::unique_ptr<Parameter<std::string>>(
+                    new Parameter<std::string>(name, label, ParameterBase::STRING, std::move(getFuncIndex), std::move(setFuncIndex))));
+            return static_cast<int>(m_parameters.size() - 1);
+        }
+
+        template<typename T>
+        int
+        createVectorParameter(const std::string &name, const std::string &label, const unsigned int dim, T *valuePtr) {
+            ParameterBase::GetVecFunc<T> getFuncIndex = [&, valuePtr](){ return (T*)((char*)valuePtr + m_offset * m_idx);};
+            ParameterBase::SetVecFunc<T> setFuncIndex = [&, valuePtr, dim](T* value){
+                auto curPtr = (T*)((char*)valuePtr + m_offset * m_idx);
+                memcpy(curPtr, value, dim*sizeof(T));
             };
+            m_parameters.push_back(
+                    std::unique_ptr<VectorParameter<T>>(new VectorParameter<T>(name, label, dim, std::move(getFuncIndex), std::move(setFuncIndex))));
+            return static_cast<int>(m_parameters.size() - 1);
         }
 
-        ListParameter(const std::string& name, const std::string& label, const unsigned int dim, ParameterBase::GetVecFunc<T> getValue, ParameterBase::SetVecFunc<T> setValue)
-                : ParameterBase(name, label, ParameterBase::INT32),
-                  m_dim(dim),
-                  m_getListValue(getValue),
-                  m_setListValue(setValue)
-        {
-            setType(getValue()[0]);
+        /** Get the parameter value by its id and list index. */
+        template<typename T>
+        T getValue(const unsigned int i, const unsigned int parameterId) {
+            if (i >= m_length){
+                std::cout << "Access at invalid index";
+                return T();
+            }
+            m_idx = i;
+            Parameter<T> *param = static_cast<Parameter<T> *>(getParameter(parameterId));
+            return param->getValue();
         }
 
-        virtual ~ListParameter() {}
-
-        void setValue(T *v)
-        {
-            if (m_setListValue != nullptr)
-                m_setListValue(v);
+        /** Set the parameter value by its id. */
+        template<typename T>
+        void setValue(const unsigned int i, const unsigned int parameterId, const T v) {
+            if (i >= m_length){
+                std::cout << "Access at invalid index";
+                return T();
+            }
+            m_idx = i;
+            ParameterBase *paramBase = getParameter(parameterId);
+            if (paramBase->checkType(v))
+                static_cast<Parameter<T> *>(paramBase)->setValue(v);
+            else
+                std::cerr << "Type mismatch in setValue!" << std::endl;
         }
-        T* getValue() const { return m_getListValue(); }
 
-        virtual void setReadOnly(const bool val)
-        {
-            m_readOnly = val;
-            if (m_setListValue == nullptr)
-                m_readOnly = true;
+        /** Get the parameter value by its id. */
+        template<typename T>
+        T *getVecValue(const unsigned int i, const unsigned int parameterId) {
+            if (i >= m_length){
+                std::cout << "Access at invalid index";
+                return T();
+            }
+            m_idx = i;
+            VectorParameter<T> *param = static_cast<VectorParameter<T> *>(getParameter(parameterId));
+            return param->getValue();
         }
 
-        template<typename TN>
-        void setType(TN v) {}
+        /** Set the parameter value by its id. */
+        template<typename T>
+        void setVecValue(const unsigned int i, const unsigned int parameterId, T *v) {
+            if (i >= m_length){
+                std::cout << "Access at invalid index";
+                return T();
+            }
+            m_idx = i;
+            ParameterBase *paramBase = getParameter(parameterId);
+            if (paramBase->checkType(v))
+                static_cast<VectorParameter<T> *>(paramBase)->setValue(v);
+            else
+                std::cerr << "Type mismatch in setValue!" << std::endl;
+        }
 
-        void setType(char v) { m_type = DataTypes::VEC_INT8; }
-        void setType(short v) { m_type = DataTypes::VEC_INT16; }
-        void setType(int v) { m_type = DataTypes::VEC_INT32; }
-        void setType(unsigned char v) { m_type = DataTypes::VEC_UINT8; }
-        void setType(unsigned short v) { m_type = DataTypes::VEC_UINT16; }
-        void setType(unsigned int v) { m_type = DataTypes::VEC_UINT32; }
-        void setType(float v) { m_type = DataTypes::VEC_FLOAT; }
-        void setType(double v) { m_type = DataTypes::VEC_DOUBLE; }
+        void setVisible(const unsigned int parameterId, const bool v) { m_parameters[parameterId]->setVisible(v); }
 
-        unsigned int getDim() const { return m_dim; }
+        bool getVisible(const unsigned int parameterId) { return m_parameters[parameterId]->getVisible(); }
+
+        void setReadOnly(const unsigned int parameterId, const bool v) { m_parameters[parameterId]->setReadOnly(v); }
+
+        bool getReadOnly(const unsigned int parameterId) { return m_parameters[parameterId]->getReadOnly(); }
+
+        void setName(const unsigned int parameterId, const std::string &v) { m_parameters[parameterId]->setName(v); }
+
+        std::string getName(const unsigned int parameterId) { return m_parameters[parameterId]->getName(); }
+
+        void setLabel(const unsigned int parameterId, const std::string &v) { m_parameters[parameterId]->setLabel(v); }
+
+        std::string getLabel(const unsigned int parameterId) { return m_parameters[parameterId]->getLabel(); }
+
+        void setGroup(const unsigned int parameterId, const std::string &v) { m_parameters[parameterId]->setGroup(v); }
+
+        std::string getGroup(const unsigned int parameterId) { return m_parameters[parameterId]->getGroup(); }
+
+        void setDescription(const unsigned int parameterId,
+                            const std::string &v) { m_parameters[parameterId]->setDescription(v); }
+
+        std::string
+        getDescription(const unsigned int parameterId) { return m_parameters[parameterId]->getDescription(); }
+
+        void setHotKey(const unsigned int parameterId, const std::string &v) {
+            m_parameters[parameterId]->setHotKey(v);
+        }
+
+        std::string getHotKey(const unsigned int parameterId) { return m_parameters[parameterId]->getHotKey(); }
+
+        GenParam::ParameterBase::DataTypes
+        getType(const unsigned int parameterId) const { return m_parameters[parameterId]->getType(); }
+
     };
-
-    using FloatListParameter = ListParameter<float>;
-    using DoubleListParameter = ListParameter<double>;
-    using LongDoubleListParameter = ListParameter<long double>;
-    using CharListParameter = ListParameter<unsigned char>;
-    using UnsignedShortListParameter = ListParameter<unsigned short>;
-    using UnsignedIntListParameter = ListParameter<unsigned int>;
-    using UnsignedLongListParameter = ListParameter<unsigned long>;
-    using SignedCharListParameter = ListParameter<signed char>;
-    using ShortListParameter = ListParameter<signed short>;
-    using IntListParameter = ListParameter<signed int>;
-    using LongListParameter = ListParameter<signed long>;
 }
+
 #endif //GENERICPARAMETERS_LISTPARAMETER_H
