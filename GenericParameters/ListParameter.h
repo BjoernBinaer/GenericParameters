@@ -27,12 +27,13 @@ namespace GenParam {
         ResizeFunc m_resize;
         ssize_t m_offset;
         unsigned int m_length;
+        unsigned int m_maxLength;
         unsigned int m_idx;
 
     public:
         template<typename T>
         ListParameter(const std::string &name, const std::string &label, std::vector<T> *data)
-                : ParameterBase(name, label, ParameterBase::STRUCT), m_parameters(), m_length(data->size()), m_offset(sizeof(T)), m_resize([data](const unsigned int i){ data->resize(i); }){}
+                : ParameterBase(name, label, ParameterBase::STRUCT), m_parameters(), m_length(data->size()), m_maxLength(data->capacity()), m_offset(sizeof(T)), m_resize([data](const unsigned int i){ data->resize(i); }){}
 
         virtual ~ListParameter() { m_parameters.clear(); }
 
@@ -43,6 +44,9 @@ namespace GenParam {
         ParameterBase *const getParameter(const unsigned int index) const { return m_parameters[index].get(); }
 
         void resize(unsigned int i){
+            if (i >= m_maxLength){
+                std::cout << "Requested resize which is greater than the maximum capacity. Use vector::reserve to allocate more memory for the vector.";
+            }
             m_length = i;
             m_resize(i);
         }

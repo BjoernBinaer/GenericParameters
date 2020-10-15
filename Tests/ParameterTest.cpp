@@ -73,7 +73,7 @@ void paramTest()
 
 	auto strParam = static_cast<StringParameter*>(tc.getParameter(TestParameterObject::MY_STRING_PARAMETER));
 	assert(tc.getValue<std::string>(TestParameterObject::MY_STRING_PARAMETER) == "test string");
-    tc.setValue<std::string>(TestParameterObject::MY_STRING_PARAMETER, "other test string");
+    strParam->setValue("other test string");
     assert(tc.getValue<std::string>(TestParameterObject::MY_STRING_PARAMETER) == "other test string");
 	assert(tc.getType(TestParameterObject::MY_STRING_PARAMETER) == ParameterBase::STRING);
 
@@ -120,13 +120,18 @@ void paramTest()
     }
     {
         auto param = dynamic_cast<DoubleVectorParameter*>(structParam->getParameter(TestParameterObject::MY_STRUCT_PARAMETERS[3]));
-        assert(param->getValue()[0] == 3.2);
-        assert(param->getValue()[1] == 4.5);
-        assert(param->getValue()[2] == 3.3);
+        assert(param->getValue()[0] == 3.2); assert(param->getValue()[1] == 4.5); assert(param->getValue()[2] == 3.3);
+        double other_vals[3] = {5.5, 6.6, 7.7};
+        param->setValue(other_vals);
+        assert(param->getValue()[0] == 5.5); assert(param->getValue()[1] == 6.6); assert(param->getValue()[2] == 7.7);
+        other_vals[0] = 3.2; other_vals[1] = 4.5; other_vals[2] = 3.3;
+        param->setValue(other_vals);
+        assert(param->getValue()[0] == 3.2); assert(param->getValue()[1] == 4.5); assert(param->getValue()[2] == 3.3);
     }
 
 
     auto listParam = dynamic_cast<ListParameter*>(tc.getParameter(TestParameterObject::MY_LIST_PARAMETER));
+    assert(listParam->size() == 2);
     {
         auto param = dynamic_cast<Parameter<int>*>(listParam->getParameter(TestParameterObject::MY_LIST_PARAMETERS[0]));
         listParam->setIndex(0); assert(param->getValue() == 1);
@@ -145,13 +150,9 @@ void paramTest()
     {
         auto param = dynamic_cast<VectorParameter<double>*>(listParam->getParameter(TestParameterObject::MY_LIST_PARAMETERS[3]));
         listParam->setIndex(0);
-        assert(param->getValue()[0] == 3.2);
-        assert(param->getValue()[1] == 4.5);
-        assert(param->getValue()[2] == 3.3);
+        assert(param->getValue()[0] == 3.2); assert(param->getValue()[1] == 4.5); assert(param->getValue()[2] == 3.3);
         listParam->setIndex(1);
-        assert(param->getValue()[0] == 1.2);
-        assert(param->getValue()[1] == 4.2);
-        assert(param->getValue()[2] == 6.3);
+        assert(param->getValue()[0] == 1.2); assert(param->getValue()[1] == 4.2); assert(param->getValue()[2] == 6.3);
     }
 
 

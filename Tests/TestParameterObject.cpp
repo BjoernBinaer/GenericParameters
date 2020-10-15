@@ -89,7 +89,7 @@ void TestParameterObject::initParameters()
     auto struct_param = dynamic_cast<StructParameter*>(getParameter(MY_STRUCT_PARAMETER));
     MY_STRUCT_PARAMETERS[0] = struct_param->createNumericParameter("A", "A", &m_struct.front().a);
     MY_STRUCT_PARAMETERS[1] = struct_param->createNumericParameter("B", "B", &m_struct.front().b);
-    MY_STRUCT_PARAMETERS[2] = struct_param->createNumericParameter("C", "C", &m_struct.front().c);
+    MY_STRUCT_PARAMETERS[2] = struct_param->createStringParameter("C", "C", &m_struct.front().c);
     MY_STRUCT_PARAMETERS[3] = struct_param->createVectorParameter("D", "D", 3, &m_struct.front().d[0]);
 
     m_struct.push_back({2, 4.2, "GenericParams", {1.2, 4.2, 6.3}});
@@ -100,7 +100,7 @@ void TestParameterObject::initParameters()
     auto list_param = dynamic_cast<ListParameter*>(getParameter(MY_LIST_PARAMETER));
     MY_LIST_PARAMETERS[0] = list_param->createNumericParameter("A", "A", &m_struct.front().a);
     MY_LIST_PARAMETERS[1] = list_param->createNumericParameter("B", "B", &m_struct.front().b);
-    MY_LIST_PARAMETERS[2] = list_param->createNumericParameter("C", "C", &m_struct.front().c);
+    MY_LIST_PARAMETERS[2] = list_param->createStringParameter("C", "C", &m_struct.front().c);
     MY_LIST_PARAMETERS[3] = list_param->createVectorParameter("D", "D", 3, &m_struct.front().d[0]);
 }
 
