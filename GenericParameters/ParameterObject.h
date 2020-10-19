@@ -92,6 +92,13 @@ namespace GenParam
             return static_cast<int>(m_parameters.size() - 1);
         }
 
+        template<typename T>
+        int createListParameter(const std::string &name, const std::string &label, std::vector<T> *data, ListParameter::ResizeFunc func)
+        {
+            m_parameters.push_back(std::unique_ptr<ListParameter>(new ListParameter(name, label, data, std::move(func))));
+            return static_cast<int>(m_parameters.size() - 1);
+        }
+
 		template<typename T>
 		int createVectorParameter(const std::string &name, const std::string &label, const unsigned int dim, T* valuePtr)
 		{

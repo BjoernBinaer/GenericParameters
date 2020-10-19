@@ -17,6 +17,7 @@ namespace GenParam {
     /** Class of a vector parameter.
     */
     class ListParameter : public ParameterBase {
+    public:
         using GetListFunc = std::function<void*(unsigned int)>;  // Get a single parameter from the list
         using SetListFunc = std::function<void(unsigned int, void*)>;  // Set a single parameter from the list
         using ResizeFunc = std::function<void(
@@ -33,7 +34,11 @@ namespace GenParam {
     public:
         template<typename T>
         ListParameter(const std::string &name, const std::string &label, std::vector<T> *data)
-                : ParameterBase(name, label, ParameterBase::STRUCT), m_parameters(), m_length(data->size()), m_maxLength(data->capacity()), m_offset(sizeof(T)), m_resize([data](const unsigned int i){ data->resize(i); }){}
+                : ParameterBase(name, label, ParameterBase::LIST), m_idx(0), m_parameters(), m_length(data->size()), m_maxLength(data->capacity()), m_offset(sizeof(T)), m_resize([data](const unsigned int i){ data->resize(i); }){}
+
+        template<typename T>
+        ListParameter(const std::string &name, const std::string &label, std::vector<T> *data, ResizeFunc func)
+                : ParameterBase(name, label, ParameterBase::LIST), m_idx(0), m_parameters(), m_length(data->size()), m_maxLength(data->capacity()), m_offset(sizeof(T)), m_resize(std::move(func)){}
 
         virtual ~ListParameter() { m_parameters.clear(); }
 
