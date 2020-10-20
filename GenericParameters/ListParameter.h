@@ -26,7 +26,7 @@ namespace GenParam {
     protected:
         std::vector<ParameterBase::Ptr> m_parameters;
         ResizeFunc m_resize;
-        ssize_t m_offset;
+        unsigned int m_offset;
         unsigned int m_length;
         unsigned int m_maxLength;
         unsigned int m_idx;
