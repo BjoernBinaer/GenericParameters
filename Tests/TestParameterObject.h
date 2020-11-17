@@ -23,6 +23,7 @@ namespace GenParam
 		int m_enumValue2;
 		std::string m_strValue;
 		double m_vec3Value[3];
+		int m_counter;
 		std::vector<Struct> m_struct;
 
 	public:
@@ -33,6 +34,7 @@ namespace GenParam
 		static int MY_ENUM_PARAMETER2;
 		static int MY_STRING_PARAMETER;
 		static int MY_VEC3_PARAMETER;
+		static int MY_FUNCTION_PARAMETER;
         static int MY_STRUCT_PARAMETER;
         static int MY_STRUCT_PARAMETERS[4];
         static int MY_LIST_PARAMETER;
@@ -42,8 +44,8 @@ namespace GenParam
 		static int MY_ENUM_VALUE2;
 		static int MY_ENUM2_VALUE1;
 		static int MY_ENUM2_VALUE2;
-
-		TestParameterObject() { initParameters();  };
+		
+		TestParameterObject() { initParameters(); m_counter = 0; };
 		~TestParameterObject() {};
 
 		virtual void initParameters();
@@ -55,6 +57,9 @@ namespace GenParam
 		void setIntValue(int val) { m_intValue = val; }
 
 		int getEnumValue2() const { return m_enumValue2; }
+	
+		int getCounter() const { return m_counter; }
+		void setCounter(int val) { m_counter = val; }
 	};
 }
 

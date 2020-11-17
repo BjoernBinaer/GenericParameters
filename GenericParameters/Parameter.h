@@ -33,6 +33,7 @@ namespace GenParam
 			VEC_UINT32,
 			ENUM, 
 			STRING,
+			FUNCTION,
 			LIST,
 			STRUCT,
 			NPARAMS
