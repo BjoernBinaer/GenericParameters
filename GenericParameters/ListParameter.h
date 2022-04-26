@@ -12,6 +12,7 @@
 #include "VectorParameter.h"
 #include "StructParameter.h"
 #include <iostream>
+#include <assert.h>
 
 namespace GenParam {
     /** Class of a vector parameter.
