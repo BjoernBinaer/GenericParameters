@@ -1,3 +1,7 @@
+1.1.0
+	
+	- added list and struct parameters
+	- added copy constructor and assignment operator
 	- added FunctionParameter
 
 1.0.0

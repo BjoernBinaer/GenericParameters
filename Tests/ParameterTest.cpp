@@ -100,7 +100,6 @@ void paramTest()
 	assert(tc.getCounter() == 2);
 	assert(tc.getType(TestParameterObject::MY_FUNCTION_PARAMETER) == ParameterBase::FUNCTION);
 
-
  	auto structParam = dynamic_cast<StructParameter*>(tc.getParameter(TestParameterObject::MY_STRUCT_PARAMETER));
     {
         auto param = dynamic_cast<Parameter<int>*>(structParam->getParameter(TestParameterObject::MY_STRUCT_PARAMETERS[0]));
