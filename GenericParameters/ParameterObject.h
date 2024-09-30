@@ -59,6 +59,15 @@ namespace GenParam
 			return static_cast<int>(m_parameters.size() - 1);
 		}
 
+        template<typename T, typename U>
+        int createNumericParameter(const std::string &name, const std::string &label, U* valuePtr, std::function<T(U*)> getValue, std::function<void(U*, T)> setValue)
+        {
+            ParameterBase::GetFunc<T> getFunc = std::bind(getValue, valuePtr);
+            ParameterBase::SetFunc<T> setFunc = std::bind(setValue, valuePtr, std::placeholders::_1);
+            m_parameters.push_back(std::unique_ptr<NumericParameter<T>>(new NumericParameter<T>(name, label, getFunc, setFunc)));
+            return static_cast<int>(m_parameters.size() - 1);
+        }
+
 		template<typename T>
 		int createNumericParameter(const std::string &name, const std::string &label, ParameterBase::GetFunc<T> getValue, ParameterBase::SetFunc<T> setValue = {})
 		{
@@ -72,6 +81,15 @@ namespace GenParam
 			return static_cast<int>(m_parameters.size() - 1);
 		}
 
+        template<typename T>
+        int createBoolParameter(const std::string &name, const std::string &label, T* valuePtr, std::function<bool(T*)> getValue, std::function<void(T*, bool)> setValue = {})
+        {
+            ParameterBase::GetFunc<bool> getFunc = std::bind(getValue, valuePtr);
+            ParameterBase::SetFunc<bool> setFunc = std::bind(setValue, valuePtr, std::placeholders::_1);
+            m_parameters.push_back(std::unique_ptr<Parameter<bool>>(new Parameter<bool>(name, label, ParameterBase::BOOL, getFunc, setFunc)));
+            return static_cast<int>(m_parameters.size() - 1);
+        }
+
 		int createBoolParameter(const std::string &name, const std::string &label, Parameter<bool>::GetFunc<bool> getValue, Parameter<bool>::SetFunc<bool> setValue = {})
 		{
 			m_parameters.push_back(std::unique_ptr<Parameter<bool>>(new Parameter<bool>(name, label, ParameterBase::BOOL, getValue, setValue)));
@@ -84,6 +102,15 @@ namespace GenParam
 			return static_cast<int>(m_parameters.size() - 1);
 		}
 
+        template<typename T>
+        int createEnumParameter(const std::string &name, const std::string &label, T* valuePtr, std::function<int(T*)> getValue, std::function<void(T*, int)> setValue = {})
+        {
+            ParameterBase::GetFunc<int> getFunc = std::bind(getValue, valuePtr);
+            ParameterBase::SetFunc<int> setFunc = std::bind(setValue, valuePtr, std::placeholders::_1);
+            m_parameters.push_back(std::unique_ptr<EnumParameter>(new EnumParameter(name, label, getFunc, setFunc)));
+            return static_cast<int>(m_parameters.size() - 1);
+        }
+
 		int createEnumParameter(const std::string &name, const std::string &label, ParameterBase::GetFunc<int> getValue, ParameterBase::SetFunc<int> setValue = {})
 		{
 			m_parameters.push_back(std::unique_ptr<EnumParameter>(new EnumParameter(name, label, getValue, setValue)));
@@ -95,6 +122,15 @@ namespace GenParam
 			m_parameters.push_back(std::unique_ptr<Parameter<std::string>>(new Parameter<std::string>(name, label, ParameterBase::STRING, valuePtr)));
 			return static_cast<int>(m_parameters.size() - 1);
 		}
+
+        template<typename T>
+        int createStringParameter(const std::string &name, const std::string &label, T* valuePtr, std::function<std::string(T*)> getValue, std::function<void(T*, std::string)> setValue = {})
+        {
+            ParameterBase::GetFunc<std::string> getFunc = std::bind(getValue, valuePtr);
+            ParameterBase::SetFunc<std::string> setFunc = std::bind(setValue, valuePtr, std::placeholders::_1);
+            m_parameters.push_back(std::unique_ptr<Parameter<std::string>>(new Parameter<std::string>(name, label, ParameterBase::STRING, getFunc, setFunc)));
+            return static_cast<int>(m_parameters.size() - 1);
+        }
 
 		int createStringParameter(const std::string &name, const std::string &label, Parameter<std::string>::GetFunc<std::string> getValue, Parameter<std::string>::SetFunc<std::string> setValue = {})
 		{
@@ -128,6 +164,15 @@ namespace GenParam
 			m_parameters.push_back(std::unique_ptr<VectorParameter<T>>(new VectorParameter<T>(name, label, dim, valuePtr)));
 			return static_cast<int>(m_parameters.size() - 1);
 		}
+
+        template<typename T, typename U>
+        int createVectorParameter(const std::string &name, const std::string &label, const unsigned int dim, U* valuePtr, std::function<T*(U*)> getVecValue, std::function<void(U*, T*)> setVecValue = {})
+        {
+            ParameterBase::GetVecFunc<T> getFunc = std::bind(getVecValue, valuePtr);
+            ParameterBase::SetVecFunc<T> setFunc = std::bind(setVecValue, valuePtr, std::placeholders::_1);
+            m_parameters.push_back(std::unique_ptr<VectorParameter<T>>(new VectorParameter<T>(name, label, dim, getFunc, setFunc)));
+            return static_cast<int>(m_parameters.size() - 1);
+        }
 
 		template<typename T>
 		int createVectorParameter(const std::string &name, const std::string &label, const unsigned int dim, ParameterBase::GetVecFunc<T> getVecValue, ParameterBase::SetVecFunc<T> setVecValue = {})

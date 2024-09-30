@@ -88,7 +88,7 @@ void TestParameterObject::initParameters()
 	m_struct.reserve(10);
 	m_struct.push_back({1, 2.3, "Hello GenericParams", {3.2, 4.5, 3.3}});
 	MY_STRUCT_PARAMETER = createStructParameter("structParam", "Struct Parameter");
-	setGroup(MY_STRUCT_PARAMETER, "ParamterGroup");
+	setGroup(MY_STRUCT_PARAMETER, "ParameterGroup");
     setDescription(MY_STRUCT_PARAMETER, "Help text");
 
     auto struct_param = dynamic_cast<StructParameter*>(getParameter(MY_STRUCT_PARAMETER));
@@ -99,13 +99,15 @@ void TestParameterObject::initParameters()
 
     m_struct.push_back({2, 4.2, "GenericParams", {1.2, 4.2, 6.3}});
     MY_LIST_PARAMETER = createListParameter("listParam", "List Parameter", &m_struct);
-    setGroup(MY_LIST_PARAMETER, "ParamterGroup");
+    setGroup(MY_LIST_PARAMETER, "ParameterGroup");
     setDescription(MY_LIST_PARAMETER, "Help text");
 
     auto list_param = dynamic_cast<ListParameter*>(getParameter(MY_LIST_PARAMETER));
+    std::function<std::string(Struct*)> getListPart = [](Struct* structure) { return structure->c; };
+    std::function<void(Struct*, std::string)> setListPart = [](Struct* structure, std::string txt) { structure->c = txt; };
     MY_LIST_PARAMETERS[0] = list_param->createNumericParameter("A", "A", &m_struct.front().a);
     MY_LIST_PARAMETERS[1] = list_param->createNumericParameter("B", "B", &m_struct.front().b);
-    MY_LIST_PARAMETERS[2] = list_param->createStringParameter("C", "C", &m_struct.front().c);
+    MY_LIST_PARAMETERS[2] = list_param->createStringParameter("C", "C", getListPart, setListPart);
     MY_LIST_PARAMETERS[3] = list_param->createVectorParameter("D", "D", 3, &m_struct.front().d[0]);
 }
 

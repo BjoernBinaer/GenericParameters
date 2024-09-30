@@ -15,7 +15,10 @@
 #include <assert.h>
 
 namespace GenParam {
-    /** Class of a vector parameter.
+    /** Class of a list parameter.
+     *  Lists can store multiple GenParam instances of the same template type T.
+     *  They do not store the data, but store a void pointer to the beginning of the data in m_basePtr.
+     *
     */
     class ListParameter : public ParameterBase {
     public:
@@ -82,12 +85,12 @@ namespace GenParam {
         }
 
         template<typename T, typename U>
-        int createNumericParameter(const std::string &name, const std::string &label, void(U::* setter)(T),  T(U::* getter)()) {
+        int createNumericParameter(const std::string &name, const std::string &label, std::function<T(U*)> unboundGetFunc, std::function<void(U*, T)> unboundSetFunc = {}) {
             assert(sizeof(U) == m_offset);
-            ParameterBase::GetFunc<T> getFuncIndex = [&, getter](){ return (((U*)((char*)m_basePtr + m_idx * m_offset))->*getter)();};
-            ParameterBase::SetFunc<T> setFuncIndex = [&, setter](T value){ (((U*)((char*)m_basePtr + m_idx * m_offset))->*setter)(value);};
+            ParameterBase::GetFunc<T> getFunc = [&, unboundGetFunc] () { return unboundGetFunc(reinterpret_cast<U*>(static_cast<char*>(m_basePtr) + m_idx * m_offset)); };
+            ParameterBase::SetFunc<T> setFunc = [&, unboundSetFunc] (bool v) { unboundSetFunc(reinterpret_cast<U*>(static_cast<char*>(m_basePtr) + m_idx * m_offset), v); };
             m_parameters.push_back(
-                    std::unique_ptr<NumericParameter<T>>(new NumericParameter<T>(name, label, std::move(getFuncIndex), std::move(setFuncIndex))));
+                    std::unique_ptr<NumericParameter<T>>(new NumericParameter<T>(name, label, std::move(getFunc), std::move(setFunc))));
             return static_cast<int>(m_parameters.size() - 1);
         }
 
@@ -100,12 +103,12 @@ namespace GenParam {
         }
 
         template <typename T>
-        int createBoolParameter(const std::string &name, const std::string &label, void(T::* setter)(bool),  bool(T::* getter)()) {
+        int createBoolParameter(const std::string &name, const std::string &label, std::function<bool(T*)> unboundGetFunc, std::function<void(T*, bool)> unboundSetFunc = {}) {
             assert(sizeof(T) == m_offset);
-            Parameter<bool>::GetFunc<bool> getFuncIndex = [&, getter](){ return (((T*)((char*)m_basePtr + m_idx * m_offset))->*getter)();};
-            Parameter<bool>::SetFunc<bool> setFuncIndex = [&, setter](bool value){ (((T*)((char*)m_basePtr + m_idx * m_offset))->*setter)(value);};
+            ParameterBase::GetFunc<bool> getFunc = [&, unboundGetFunc] () { return unboundGetFunc(reinterpret_cast<T*>(static_cast<char*>(m_basePtr) + m_idx * m_offset)); };
+            ParameterBase::SetFunc<bool> setFunc = [&, unboundSetFunc] (bool v) { unboundSetFunc(reinterpret_cast<T*>(static_cast<char*>(m_basePtr) + m_idx * m_offset), v); };
             m_parameters.push_back(
-                    std::unique_ptr<Parameter<bool>>(new Parameter<bool>(name, label, ParameterBase::BOOL, std::move(getFuncIndex), std::move(setFuncIndex))));
+                    std::unique_ptr<Parameter<bool>>(new Parameter<bool>(name, label, ParameterBase::BOOL, std::move(getFunc), std::move(setFunc))));
             return static_cast<int>(m_parameters.size() - 1);
         }
 
@@ -117,11 +120,11 @@ namespace GenParam {
         }
 
         template <typename T>
-        int createEnumParameter(const std::string &name, const std::string &label, void(T::* setter)(int),  int(T::* getter)()) {
+        int createEnumParameter(const std::string &name, const std::string &label, std::function<int(T*)> unboundGetFunc, std::function<void(T*, int)> unboundSetFunc = {}) {
             assert(sizeof(T) == m_offset);
-            ParameterBase::GetFunc<int> getFuncIndex = [&, getter](){ return (((T*)((char*)m_basePtr + m_idx * m_offset))->*getter)();};
-            ParameterBase::SetFunc<int> setFuncIndex = [&, setter](int value){ (((T*)((char*)m_basePtr + m_idx * m_offset))->*setter)(value);};
-            m_parameters.push_back(std::unique_ptr<EnumParameter>(new EnumParameter(name, label, std::move(getFuncIndex), std::move(setFuncIndex))));
+            ParameterBase::GetFunc<int> getFunc = [&, unboundGetFunc] () { return unboundGetFunc(reinterpret_cast<T*>(static_cast<char*>(m_basePtr) + m_idx * m_offset)); };
+            ParameterBase::SetFunc<int> setFunc = [&, unboundSetFunc] (int v) { unboundSetFunc(reinterpret_cast<T*>(static_cast<char*>(m_basePtr) + m_idx * m_offset), v); };
+            m_parameters.push_back(std::unique_ptr<EnumParameter>(new EnumParameter(name, label, std::move(getFunc), std::move(setFunc))));
             return static_cast<int>(m_parameters.size() - 1);
         }
 
@@ -134,12 +137,12 @@ namespace GenParam {
         }
 
         template <typename T>
-        int createStringParameter(const std::string &name, const std::string &label, void(T::* setter)(std::string),  std::string(T::* getter)()) {
+        int createStringParameter(const std::string &name, const std::string &label, std::function<std::string(T*)> unboundGetFunc, std::function<void(T*, std::string)> unboundSetFunc = {}) {
             assert(sizeof(T) == m_offset);
-            Parameter<std::string>::GetFunc<std::string> getFuncIndex = [&, getter](){ return (((T*)((char*)m_basePtr + m_idx * m_offset))->*getter)();};
-            Parameter<std::string>::SetFunc<std::string> setFuncIndex = [&, setter](std::string value){ (((T*)((char*)m_basePtr + m_idx * m_offset))->*setter)(value);};
+            ParameterBase::GetFunc<std::string> getFunc = [&, unboundGetFunc] () { return unboundGetFunc(reinterpret_cast<T*>(static_cast<char*>(m_basePtr) + m_idx * m_offset)); };
+            ParameterBase::SetFunc<std::string> setFunc = [&, unboundSetFunc] (std::string v) { unboundSetFunc(reinterpret_cast<T*>(static_cast<char*>(m_basePtr) + m_idx * m_offset), v); };
             m_parameters.push_back(std::unique_ptr<Parameter<std::string>>(
-                    new Parameter<std::string>(name, label, ParameterBase::STRING, std::move(getFuncIndex), std::move(setFuncIndex))));
+                    new Parameter<std::string>(name, label, ParameterBase::STRING, std::move(getFunc), std::move(setFunc))));
             return static_cast<int>(m_parameters.size() - 1);
         }
 
@@ -158,10 +161,10 @@ namespace GenParam {
 
         template<typename T, typename U>
         int
-        createVectorParameter(const std::string &name, const std::string &label, const unsigned int dim, void(U::* setter)(T*),  T*(U::* getter)()) {
+        createVectorParameter(const std::string &name, const std::string &label, const unsigned int dim, std::function<T*(U*)> unboundGetFunc, std::function<void(U*, T*)> unboundSetFunc = {}) {
             assert(sizeof(U) == m_offset);
-            ParameterBase::GetVecFunc<T> getFuncIndex = [&, getter](){ return (((U*)((char*)m_basePtr + m_idx * m_offset))->*getter)();};
-            ParameterBase::SetVecFunc<T> setFuncIndex = [&, setter](T* value){ (((U*)((char*)m_basePtr + m_idx * m_offset))->*setter)(value);};
+            ParameterBase::GetVecFunc<T> getFuncIndex = [&, unboundGetFunc](){ return unboundGetFunc(reinterpret_cast<U*>(static_cast<char*>(m_basePtr) + m_idx * m_offset)); };
+            ParameterBase::SetVecFunc<T> setFuncIndex = [&, unboundSetFunc](T* value){ unboundSetFunc(reinterpret_cast<U*>(static_cast<char*>(m_basePtr) + m_idx * m_offset), value); };
             m_parameters.push_back(
                     std::unique_ptr<VectorParameter<T>>(new VectorParameter<T>(name, label, dim, std::move(getFuncIndex), std::move(setFuncIndex))));
             return static_cast<int>(m_parameters.size() - 1);
@@ -184,7 +187,6 @@ namespace GenParam {
         void setValue(const unsigned int i, const unsigned int parameterId, const T v) {
             if (i >= m_length){
                 std::cout << "Access at invalid index";
-                return T();
             }
             m_idx = i;
             ParameterBase *paramBase = getParameter(parameterId);

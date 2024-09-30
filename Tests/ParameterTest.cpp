@@ -153,6 +153,8 @@ void paramTest()
         auto param = dynamic_cast<StringParameter*>(listParam->getParameter(TestParameterObject::MY_LIST_PARAMETERS[2]));
         listParam->setIndex(0); assert(param->getValue() == "Hello GenericParams");
         listParam->setIndex(1); assert(param->getValue() == "GenericParams");
+		listParam->setValue(1, TestParameterObject::MY_LIST_PARAMETERS[2], std::string("Bye GenericParams"));
+		assert(param->getValue() == "Bye GenericParams");
     }
     {
         auto param = dynamic_cast<VectorParameter<double>*>(listParam->getParameter(TestParameterObject::MY_LIST_PARAMETERS[3]));
