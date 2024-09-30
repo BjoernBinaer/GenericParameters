@@ -107,7 +107,7 @@ void TestParameterObject::initParameters()
     std::function<void(Struct*, std::string)> setListPart = [](Struct* structure, std::string txt) { structure->c = txt; };
     MY_LIST_PARAMETERS[0] = list_param->createNumericParameter("A", "A", &m_struct.front().a);
     MY_LIST_PARAMETERS[1] = list_param->createNumericParameter("B", "B", &m_struct.front().b);
-    MY_LIST_PARAMETERS[2] = list_param->createStringParameter("C", "C", getListPart, setListPart);
+    MY_LIST_PARAMETERS[2] = list_param->createStringParameter("C", "C", &m_struct.front(), getListPart, setListPart);
     MY_LIST_PARAMETERS[3] = list_param->createVectorParameter("D", "D", 3, &m_struct.front().d[0]);
 }
 
