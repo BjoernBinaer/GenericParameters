@@ -36,6 +36,7 @@ namespace GenParam
 			FUNCTION,
 			LIST,
 			STRUCT,
+            STRUCT_LIST,
 			NPARAMS
 		};
 
