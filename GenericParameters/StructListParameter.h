@@ -181,41 +181,63 @@ namespace GenParam {
                 std::cerr << "GenParam::StructListParameter: Type mismatch in setValue!" << std::endl;
         }
 
-        /*void setVisible(const unsigned int parameterId, const bool v) { m_parameters[parameterId]->setVisible(v); }
-
-        bool getVisible(const unsigned int parameterId) { return m_parameters[parameterId]->getVisible(); }
-
-        void setReadOnly(const unsigned int parameterId, const bool v) { m_parameters[parameterId]->setReadOnly(v); }
-
-        bool getReadOnly(const unsigned int parameterId) { return m_parameters[parameterId]->getReadOnly(); }
-
-        void setName(const unsigned int parameterId, const std::string &v) { m_parameters[parameterId]->setName(v); }
-
-        std::string getName(const unsigned int parameterId) { return m_parameters[parameterId]->getName(); }
-
-        void setLabel(const unsigned int parameterId, const std::string &v) { m_parameters[parameterId]->setLabel(v); }
-
-        std::string getLabel(const unsigned int parameterId) { return m_parameters[parameterId]->getLabel(); }
-
-        void setGroup(const unsigned int parameterId, const std::string &v) { m_parameters[parameterId]->setGroup(v); }
-
-        std::string getGroup(const unsigned int parameterId) { return m_parameters[parameterId]->getGroup(); }
-
-        void setDescription(const unsigned int parameterId,
-                            const std::string &v) { m_parameters[parameterId]->setDescription(v); }
-
-        std::string
-        getDescription(const unsigned int parameterId) { return m_parameters[parameterId]->getDescription(); }
-
-        void setHotKey(const unsigned int parameterId, const std::string &v) {
-            m_parameters[parameterId]->setHotKey(v);
+        void setVisible(const bool v) {
+            m_visible = v;
+            for (auto& paramStruct: m_parameters)
+                for (auto& param: paramStruct)
+                    param->setVisible(v);
         }
+        void setVisible(const unsigned int parameterId, const bool v) {
+            m_parameters[m_idx][parameterId]->setVisible(v);
+        }
+        void setVisible(const unsigned int listIndex, const unsigned int parameterId, const bool v) {
+            m_parameters[listIndex][parameterId]->setVisible(v);
+        }
+        bool getVisible(const unsigned int parameterId) { return m_parameters[m_idx][parameterId]->getVisible(); }
+        bool getVisible(const unsigned int listIndex, const unsigned int parameterId) { return m_parameters[listIndex][parameterId]->getVisible(); }
 
-        std::string getHotKey(const unsigned int parameterId) { return m_parameters[parameterId]->getHotKey(); }
+        void setReadOnly(const bool v) {
+            m_readOnly = v;
+            for (auto& paramStruct: m_parameters)
+                for (auto& param: paramStruct)
+                    param->setReadOnly(v);
+        }
+        void setReadOnly(const unsigned int parameterId, const bool v) {
+            m_parameters[m_idx][parameterId]->setReadOnly(v);
+        }
+        void setReadOnly(const unsigned int listIndex, const unsigned int parameterId, const bool v) {
+            m_parameters[listIndex][parameterId]->setReadOnly(v);
+        }
+        bool getReadOnly(const unsigned int parameterId) { return m_parameters[m_idx][parameterId]->getReadOnly(); }
+        bool getReadOnly(const unsigned int listIndex, const unsigned int parameterId) { return m_parameters[listIndex][parameterId]->getReadOnly(); }
 
-        GenParam::ParameterBase::DataTypes
-        getType(const unsigned int parameterId) const { return m_parameters[parameterId]->getType(); }*/
+        void setName(const unsigned int parameterId, const std::string &v) { m_parameters[m_idx][parameterId]->setName(v); }
+        void setName(const unsigned int listIndex, const unsigned int parameterId, const std::string& v) { m_parameters[listIndex][parameterId]->setName(v); }
+        std::string getName(const unsigned int parameterId) { return m_parameters[m_idx][parameterId]->getName(); }
+        std::string getName(const unsigned int listIndex, const unsigned int parameterId) { return m_parameters[listIndex][parameterId]->getName(); }
 
+        void setLabel(const unsigned int parameterId, const std::string &v) { m_parameters[m_idx][parameterId]->setLabel(v); }
+        void setLabel(const unsigned int listIndex, const unsigned int parameterId, const std::string& v) { m_parameters[listIndex][parameterId]->setLabel(v); }
+        std::string getLabel(const unsigned int parameterId) { return m_parameters[m_idx][parameterId]->getLabel(); }
+        std::string getLabel(const unsigned int listIndex, const unsigned int parameterId) { return m_parameters[listIndex][parameterId]->getLabel(); }
+
+        void setGroup(const unsigned int parameterId, const std::string &v) { m_parameters[m_idx][parameterId]->setGroup(v); }
+        void setGroup(const unsigned int listIndex, const unsigned int parameterId, const std::string& v) { m_parameters[listIndex][parameterId]->setGroup(v); }
+        std::string getGroup(const unsigned int parameterId) { return m_parameters[m_idx][parameterId]->getGroup(); }
+        std::string getGroup(const unsigned int listIndex, const unsigned int parameterId) { return m_parameters[m_idx][parameterId]->getGroup(); }
+
+        void setDescription(const unsigned int parameterId, const std::string &v) { m_parameters[m_idx][parameterId]->setDescription(v); }
+        void setDescription(const unsigned int listIndex, const unsigned int parameterId, const std::string& v) { m_parameters[listIndex][parameterId]->setDescription(v); }
+        std::string getDescription(const unsigned int parameterId, const std::string& v) { return m_parameters[m_idx][parameterId]->getDescription(); }
+        std::string getDescription(const unsigned int listIndex, const unsigned int parameterId, const std::string& v) { return m_parameters[listIndex][parameterId]->getDescription(); }
+
+        void setHotKey(const unsigned int parameterId, const std::string &v) { m_parameters[m_idx][parameterId]->setHotKey(v); }
+        void setHotKey(const unsigned int listIndex, const unsigned int parameterId, const std::string& v) { m_parameters[listIndex][parameterId]->setHotKey(v); }
+        std::string getHotKey(const unsigned int parameterId, const std::string& v) { return m_parameters[m_idx][parameterId]->getHotKey(); }
+        std::string getHotKey(const unsigned int listIndex, const unsigned int parameterId, const std::string& v) { return m_parameters[listIndex][parameterId]->getHotKey(); }
+
+        GenParam::ParameterBase::DataTypes getType(const unsigned int parameterId) const { return m_parameters[m_idx][parameterId]->getType(); }
+        GenParam::ParameterBase::DataTypes getType(const unsigned int listIndex, const unsigned int parameterId) const { return m_parameters[listIndex][parameterId]->getType(); }
     };
 }
 
