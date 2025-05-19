@@ -8,6 +8,7 @@
 #include "EnumParameter.h"
 #include "VectorParameter.h"
 #include "FunctionParameter.h"
+#include "StructListParameter.h"
 #include "StructParameter.h"
 #include "ListParameter.h"
 
@@ -184,6 +185,12 @@ namespace GenParam
 		int createFunctionParameter(const std::string &name, const std::string &label, FunctionParameter::CallbackFunc function)
 		{
 			m_parameters.push_back(std::unique_ptr<FunctionParameter>(new FunctionParameter(name, label, function)));
+			return static_cast<int>(m_parameters.size() - 1);
+		}
+
+		int createStructListParameter(const std::string& name, const std::string& label, const unsigned int numElems)
+		{
+			m_parameters.push_back(std::unique_ptr<StructListParameter>(new StructListParameter(name, label, numElems)));
 			return static_cast<int>(m_parameters.size() - 1);
 		}
 
