@@ -41,6 +41,11 @@ namespace GenParam {
             m_parameters.clear();
         }
 
+        unsigned int numParameters() const { return static_cast<unsigned int>(m_parameters.size()); }
+        StructParameter* getParameter(const unsigned int index) { return m_parameters[index].get(); }
+        StructParameter* getParameter(const unsigned int index) const { return m_parameters[index].get(); }
+
+
         void resize(const unsigned int numElems)
         {
             const unsigned int oldSize = m_parameters.size();
