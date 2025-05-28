@@ -190,9 +190,15 @@ namespace GenParam
 
 		int createStructListParameter(const std::string& name, const std::string& label, const unsigned int numElems)
 		{
-			m_parameters.push_back(std::unique_ptr<StructListParameter>(new StructListParameter(name, label, numElems)));
+			m_parameters.push_back(make_unique<StructListParameter>(name, label, numElems));
 			return static_cast<int>(m_parameters.size() - 1);
 		}
+
+        int createStructListParameter(const std::string& name, const std::string& label)
+        {
+            m_parameters.push_back(make_unique<StructListParameter>(name, label));
+            return static_cast<int>(m_parameters.size() - 1);
+        }
 
 		/** Get the parameter value by its id. */
 		template<typename T>
