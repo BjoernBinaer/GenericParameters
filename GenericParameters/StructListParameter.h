@@ -23,18 +23,18 @@ namespace GenParam {
     class StructListParameter : public ParameterBase {
     protected:
         std::vector<std::unique_ptr<StructParameter>> m_parameters;
-        std::function<void(void)> m_resizeCallBack;
+        std::function<void(unsigned int)> m_resizeCallBack;
         int m_idx;                                                          // Index of the currently selected struct
 
     public:
-        StructListParameter(const std::string &name, const std::string &label, const unsigned int numElems, const std::function<void(void)>& callBackFct)
+        StructListParameter(const std::string &name, const std::string &label, const unsigned int numElems, const std::function<void(unsigned int)>& callBackFct)
                 : ParameterBase(name, label, ParameterBase::STRUCT_LIST) {
             m_idx = 0;
             m_resizeCallBack = callBackFct;
             resize(numElems);
         }
 
-        StructListParameter(const std::string& name, const std::string& label, const std::function<void(void)>& callBackFct)
+        StructListParameter(const std::string& name, const std::string& label, const std::function<void(unsigned int)>& callBackFct)
                 : ParameterBase(name, label, ParameterBase::STRUCT_LIST) {
             m_resizeCallBack = callBackFct;
             m_idx = -1;
@@ -62,7 +62,7 @@ namespace GenParam {
                 m_idx = m_parameters.size() - 1;
 
             if (m_resizeCallBack != nullptr)
-                m_resizeCallBack();
+                m_resizeCallBack(numElems);
         }
 
         void setVisible(const bool v) {
