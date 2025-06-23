@@ -45,9 +45,18 @@ namespace GenParam {
         }
 
         unsigned int numParameters() const { return static_cast<unsigned int>(m_parameters.size()); }
+        StructParameter* getIndexedParameter() { return m_parameters[m_idx].get(); }
         StructParameter* getParameter(const unsigned int index) { return m_parameters[index].get(); }
         StructParameter* getParameter(const unsigned int index) const { return m_parameters[index].get(); }
 
+        void setIndex(int index)
+        {
+            if (index >= m_parameters.size() || index < 0)
+                m_idx = -1;
+            else
+                m_idx = static_cast<int>(index);
+        }
+        int getIndex() const { return m_idx; }
 
         void resize(const unsigned int numElems)
         {
