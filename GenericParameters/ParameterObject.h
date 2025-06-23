@@ -190,13 +190,13 @@ namespace GenParam
 
 		int createStructListParameter(const std::string& name, const std::string& label, const unsigned int numElems, const std::function<void(unsigned int)>& callBackFct)
 		{
-			m_parameters.push_back(make_unique<StructListParameter>(name, label, numElems, callBackFct));
+			m_parameters.push_back(std::unique_ptr<StructListParameter>(new StructListParameter(name, label, numElems, callBackFct)));
 			return static_cast<int>(m_parameters.size() - 1);
 		}
 
         int createStructListParameter(const std::string& name, const std::string& label, const std::function<void(unsigned int)>& callBackFct)
         {
-            m_parameters.push_back(make_unique<StructListParameter>(name, label, callBackFct));
+            m_parameters.push_back(std::unique_ptr<StructListParameter>(new StructListParameter(name, label, callBackFct)));
             return static_cast<int>(m_parameters.size() - 1);
         }
 
