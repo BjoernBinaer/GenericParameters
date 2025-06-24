@@ -65,7 +65,7 @@ namespace GenParam {
 
             if (oldSize < m_parameters.size())
                 for (unsigned int i = oldSize; i < m_parameters.size(); i++)
-                    m_parameters[i] = std::unique_ptr<StructParameter>(new StructParameter(m_name + "_" + std::to_string(i), m_label));
+                    m_parameters[i] = std::unique_ptr<StructParameter>(new StructParameter(m_name + "_" + std::to_string(i), m_label, true));
 
             if (m_parameters.size() >= m_idx)
                 m_idx = m_parameters.size() - 1;

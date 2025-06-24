@@ -17,8 +17,8 @@ namespace GenParam
         std::vector<ParameterBase::Ptr> m_parameters;
 
     public:
-        StructParameter(const std::string& name, const std::string& label)
-                : ParameterBase(name, label, ParameterBase::STRUCT), m_parameters() {}
+        StructParameter(const std::string& name, const std::string& label, const bool unlabeled = false)
+                : ParameterBase(name, label, unlabeled ? ParameterBase::STRUCT : ParameterBase::OBJECT), m_parameters() {}
         virtual ~StructParameter() { m_parameters.clear(); }
 
         /** This method should be overwritten to init the parameter definitions. */
